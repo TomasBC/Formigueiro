@@ -12,6 +12,7 @@ ModelImporter:
     2300000: blk_ant
     3300000: blk_ant
     4300000: blk_ant
+    6400000: blk_ant
   materials:
     importMaterials: 1
     materialName: 0
@@ -33,7 +34,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 200
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
