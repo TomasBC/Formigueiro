@@ -43,7 +43,7 @@ public class ReactiveAnt : MonoBehaviour {
 
 		//Wall collision
 		if (collision.gameObject.name.Contains("Wall")) {
-			RotateAnt();
+			Rotate();
 		}
 	}
 
@@ -60,7 +60,7 @@ public class ReactiveAnt : MonoBehaviour {
 		}
 	}
 
-	private void RotateAnt(){
+	private void Rotate(){
 
 		switch (Random.Range (0, 3)) {
 		case 0:
