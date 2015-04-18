@@ -9,14 +9,14 @@ public class ReactiveAnt : MonoBehaviour {
 	public float speed;
 	private int energy = 100;
 	private bool carrying = false;
-	
+
 	void Start() {
 		rb = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate() {
-			Move();
+		Move();
 	}
 
 	public void Attacked(int value) {
@@ -44,7 +44,7 @@ public class ReactiveAnt : MonoBehaviour {
 
 		//Wall collision
 		if (collision.gameObject.name.Contains("Wall")) {
-			RotateAnt();
+			Rotate();
 		}
 		if (collision.gameObject.name.Contains ("UnloadZone")) {
 			carrying = false;
@@ -59,9 +59,7 @@ public class ReactiveAnt : MonoBehaviour {
 	private void Move() {
 
 		//Move forward
-		transform.position = transform.position + transform.forward * speed * Time.deltaTime;
-		//rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
-	
+		rb.MovePosition (transform.position + transform.forward * speed * Time.deltaTime);
 		//If carrying food move it as well
 		if (CarryingFood()) {
 			Vector3 pos = transform.position + new Vector3(0f,1f,0f);
@@ -69,13 +67,21 @@ public class ReactiveAnt : MonoBehaviour {
 		}
 	}
 
-	private void RotateAnt(){
+	private void Rotate(){
 
 		switch (Random.Range (0, 3)) {
-			case 0 : rb.gameObject.transform.Rotate(0, -90f, 0); break;
-			case 1 : rb.gameObject.transform.Rotate(0, 90f, 0); break;
-			case 2 : rb.gameObject.transform.Rotate(0, 180f, 0); break;
-			case 3 : rb.gameObject.transform.Rotate(0, -180f, 0); break;
+		case 0:
+			rb.transform.Rotate (0.0f, -90.0f, 0.0f);
+			break;
+		case 1:
+			rb.transform.Rotate (0.0f, 90.0f, 0.0f);
+			break;
+		case 2:
+			rb.transform.Rotate (0.0f, 180.0f, 0.0f);
+			break;
+		case 3:
+			rb.transform.Rotate (0.0f, -180.0f, 0.0f);
+			break;
 		}
 	}
 }
