@@ -49,7 +49,7 @@ public class ReactiveAnt : MonoBehaviour {
 		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
 		if (carrying) {
 			pos = transform.position + new Vector3(0f,1f,0f);
-			food.transform.position = pos;
+			food.transform.position = pos; 
 		}
 	}
 
