@@ -37,6 +37,7 @@ public class ReactiveAnt : MonoBehaviour {
 			food = collider.gameObject;
 			carrying = true;
 		}
+
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -45,13 +46,21 @@ public class ReactiveAnt : MonoBehaviour {
 		if (collision.gameObject.name.Contains("Wall")) {
 			RotateAnt();
 		}
+		if (collision.gameObject.name.Contains ("UnloadZone")) {
+			carrying = false;
+			food.transform.position = food.transform.position - food.transform.forward* 10;
+			food = null;
+			rb.gameObject.transform.Rotate(0, 180f, 0);
+
+		}
 	}
 
 	//Reactors
 	private void Move() {
 
 		//Move forward
-		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+		transform.position = transform.position + transform.forward * speed * Time.deltaTime;
+		//rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
 	
 		//If carrying food move it as well
 		if (CarryingFood()) {
