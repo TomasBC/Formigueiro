@@ -15,7 +15,7 @@ public class ReactiveAnt : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate() {
-		Move();
+			Move();
 	}
 
 	public void Attacked(int value) {
@@ -30,11 +30,17 @@ public class ReactiveAnt : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		//if (collision.gameObject.tag == "") {} //Wall, Enemy...
+		if (collision.gameObject.name.Contains("Wall")) {
+			RotateAnt();
+		} //Wall, Enemy...
 	}
 
 	//Reactors
 	private void Move() {
-		rb.AddForce(transform.forward * speed * Time.deltaTime);
+		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+	}
+
+	private void RotateAnt(){
+		rb.gameObject.transform.Rotate( -90, 0, 0);
 	}
 }

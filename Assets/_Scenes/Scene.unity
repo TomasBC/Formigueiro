@@ -1269,7 +1269,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1197054983}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1227372484 stripped
+--- !u!1 &1227372484
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: c65b6a131bf32fa41bd086d762c547e1, type: 3}
   m_PrefabInternal: {fileID: 1871303687}
@@ -1299,7 +1299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acdf238d2f234b9b8921da7106f1383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 60
+  speed: 4
 --- !u!65 &1227372489
 BoxCollider:
   m_ObjectHideFlags: 0
