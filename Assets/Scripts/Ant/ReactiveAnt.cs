@@ -8,6 +8,7 @@ public class ReactiveAnt : MonoBehaviour {
 	public float speed;
 	private int energy = 100;
 	private bool carrying = false;
+	private GameObject food;
 
 	void Start() {
 		rb = GetComponent<Rigidbody>();
@@ -29,18 +30,36 @@ public class ReactiveAnt : MonoBehaviour {
 		return carrying;
 	}
 
+	void OnTriggerEnter(Collider collider){
+		if (collider.gameObject.name.Contains("Orange")) {
+			food = collider.gameObject;
+			carrying = true;
+		}
+	}
+
 	void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.name.Contains("Wall")) {
 			RotateAnt();
-		} //Wall, Enemy...
+		} //Wall, Enemy... //Wall, Enemy...
 	}
 
 	//Reactors
 	private void Move() {
+		Vector3 pos;
 		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+		if (carrying) {
+			pos = transform.position + new Vector3(0f,1f,0f);
+			food.transform.position = pos;
+		}
 	}
 
 	private void RotateAnt(){
-		rb.gameObject.transform.Rotate( -90, 0, 0);
+		int rot = Random.Range (0, 3);
+		switch (rot) {
+		case 0 : rb.gameObject.transform.Rotate(0, -90f, 0); break;
+		case 1 : rb.gameObject.transform.Rotate(0, 90f, 0); break;
+		case 2 : rb.gameObject.transform.Rotate(0, 180f, 0); break;
+		case 3 : rb.gameObject.transform.Rotate(0, -180f, 0); break;
+		}
 	}
 }
