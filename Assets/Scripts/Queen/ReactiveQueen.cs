@@ -3,44 +3,27 @@ using System.Collections;
 
 public class ReactiveQueen : MonoBehaviour {
 
-	// Use this for initialization
+	//Constant variables
+	public static readonly int SPEED_MAX = 4;
+	public static readonly float ENERGY_MAX = 100.0f;
+	
+	//Class variables
 	private Rigidbody rb;
 	private GameObject food;
-	
-	public float speed;
-	private float energy = 100;
+
+	private float speed = SPEED_MAX;
+	private float energy = ENERGY_MAX;
 	
 	void Start() {
 		rb = GetComponent<Rigidbody>();
 	}
 	
-	// Update is called once per frame
 	void FixedUpdate() {
 		Move();
-		energy -= 0.01f;
-		if (energy < 0)
-			Destroy (this);
+		Energy(-0.01f); //Lose a bit of energy every frame
 	}
-	
-	public void Attacked(int value) {
-		energy -= value;
-		if (energy < 0)
-			Destroy(this);
-	}
-	
-	//Sensors	
-	
-	void OnTriggerEnter(Collider collider){
-		
-		//Load food
-		if(collider.gameObject.name.Equals("QueenDoor1"))
-			rb.transform.Rotate (0.0f, 180.0f, 0.0f);
 
-		if(collider.gameObject.name.Equals("QueenDoor"))
-			rb.transform.Rotate (0.0f, 90.0f, 0.0f);
-		
-	}
-	
+	//Sensors	
 	void OnCollisionEnter(Collision collision) {
 		
 		//Wall collision
@@ -49,9 +32,11 @@ public class ReactiveQueen : MonoBehaviour {
 		}
 
 		if (collision.gameObject.name.Contains("Food")) {
+
 			if(collision.gameObject.name.Contains("Orange")){
-				if(energy < 100){
-					energy += 40;
+
+				if(energy < ENERGY_MAX){
+					Energy(40.0f);
 				}
 			}
 			Destroy(collision.gameObject);
@@ -62,13 +47,12 @@ public class ReactiveQueen : MonoBehaviour {
 	private void Move() {
 		
 		//Move forward
-		rb.MovePosition (transform.position + transform.forward * speed * Time.deltaTime);
+		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
 	}
 	
 	private void Rotate(){
-		float y = Random.Range (0f, 360f);
-		rb.transform.Rotate (0.0f, y, 0.0f);
-	/*	switch (Random.Range (0, 3)) {
+
+		switch (Random.Range (0, 3)) {
 		case 0:
 			rb.transform.Rotate (0.0f, -90.0f, 0.0f);
 			break;
@@ -81,6 +65,20 @@ public class ReactiveQueen : MonoBehaviour {
 		case 3:
 			rb.transform.Rotate (0.0f, -180.0f, 0.0f);
 			break;
-		}*/
+		}
+	}
+
+	public void Energy(float energy) {
+		
+		//Energy below max
+		if (energy < ENERGY_MAX) {
+			this.energy += energy;
+			
+			if(energy > ENERGY_MAX) { //Cap energy to max
+				energy = ENERGY_MAX;
+			}
+		} else if (energy < 0.0f) { //Kill if no energy is available
+			Destroy (this);
+		}
 	}
 }

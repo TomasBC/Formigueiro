@@ -3,49 +3,51 @@ using System.Collections;
 
 public class ReactiveAnt : MonoBehaviour {
 
+	//Constant variables
+	public static readonly int SPEED_MAX = 4;
+	public static readonly float ENERGY_MAX = 100.0f;
+
+	//Class variables
 	private Rigidbody rb;
 	private GameObject food;
-
-	public float speed;
-	private float energy = 100;
-	private bool carrying = false;
+	
+	private float speed = SPEED_MAX;
+	private float energy = ENERGY_MAX;
 
 	void Start() {
 		rb = GetComponent<Rigidbody>();
 	}
 	
-	// Update is called once per frame
 	void FixedUpdate() {
 		Move();
-		energy -= 0.01f;
+		Energy(-0.01f); //Lose a bit of energy every frame
 	}
-
-	public void Attacked(int value) {
-		energy -= value;
-		if (energy < 0)
-			Destroy(this);
-	}
-
+	
 	//Sensors
 	public bool CarryingFood() {
-		return carrying;
+
+		if (food != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	void OnTriggerEnter(Collider collider){
 
-		//Load food
+		//Unload food
 		if (collider.gameObject.name.Contains ("UnloadZone")) {
-			if(carrying){
-				if(energy < 100)
-					energy += 10;
-				carrying = false;	
-				food.GetComponent<Rigidbody>().AddForce(rb.transform.forward * 150);
-				food = null;
-				rb.gameObject.transform.Rotate(0, 180f, 0);
-			}else
-				rb.gameObject.transform.Rotate(0, 180f, 0);
-		}
 
+			if(CarryingFood()){
+
+				//Gather energy before unloading the object
+				Energy(10);
+
+				food.GetComponent<Rigidbody>().AddForce(rb.transform.forward * 150.0f);
+				food = null;
+			}
+			Rotate();
+		}
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -54,9 +56,9 @@ public class ReactiveAnt : MonoBehaviour {
 		if (collision.gameObject.name.Contains("Wall")) {
 			Rotate();
 		}
-		if (collision.gameObject.name.Contains("Food") && !carrying) {
-			food = collision.gameObject;
-			carrying = true;
+		//Carry food
+		if (collision.gameObject.name.Contains("Food") && !CarryingFood()) {
+				food = collision.gameObject;
 		}
 	}
 
@@ -64,21 +66,17 @@ public class ReactiveAnt : MonoBehaviour {
 	private void Move() {
 
 		//Move forward
-		rb.MovePosition (transform.position + transform.forward * speed * Time.deltaTime);
+		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+
 		//If carrying food move it as well
 		if (CarryingFood()) {
-			Vector3 pos = transform.position + new Vector3(0f,1f,0f);
-			food.transform.position = pos; 
+			food.transform.position = rb.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
 		}
 	}
 
-	private void Rotate(){
+	private void Rotate() {
 
-		float y = Random.Range (0f, 360f);
-		rb.transform.Rotate (0.0f, y, 0.0f);
-
-
-		/*switch (Random.Range (0, 3)) {
+		switch (Random.Range (0, 3)) {
 		case 0:
 			rb.transform.Rotate (0.0f, -90.0f, 0.0f);
 			break;
@@ -91,6 +89,20 @@ public class ReactiveAnt : MonoBehaviour {
 		case 3:
 			rb.transform.Rotate (0.0f, -180.0f, 0.0f);
 			break;
-		}*/
+		}
+	}
+
+	public void Energy(float energy) {
+
+		//Energy below max
+		if (energy < ENERGY_MAX) {
+			this.energy += energy;
+
+			if(energy > ENERGY_MAX) { //Cap energy to max
+				energy = ENERGY_MAX;
+			}
+		} else if (energy < 0.0f) { //Kill if no energy is available
+			Destroy (this);
+		}
 	}
 }
