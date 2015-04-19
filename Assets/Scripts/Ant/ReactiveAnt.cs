@@ -12,7 +12,8 @@ public class ReactiveAnt : MonoBehaviour {
 
 	//Class variables
 	private Rigidbody rb;
-	private GameObject food;
+	private Rigidbody food;
+
 	private float speed = SPEED_MAX;
 	private float energy = ENERGY_MAX;
 
@@ -47,12 +48,14 @@ public class ReactiveAnt : MonoBehaviour {
 				//Gather energy before unloading the object
 				Energy(10);
 
-				food.GetComponent<Rigidbody>().AddForce(rb.transform.forward * 150.0f);
+				//Throw food
+				food.freezeRotation = false;
+				food.AddForce(rb.transform.forward * 150.0f);
 				food = null;
 			}
 			Rotate(BASE_ROTATE_MAX);
 		}
-		//Door? (Queen Door and Labyrinth
+		//Door? (Queen Door and Labyrinth)
 		if (collider.gameObject.name.Contains ("Door")) {
 			Rotate(BASE_ROTATE_MAX);
 		}
@@ -61,16 +64,16 @@ public class ReactiveAnt : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 
 		//Wall? (Map Boundaries and Labyrinth Walls)
-		if (collision.gameObject.name.Contains("Wall")) {
+		if (collision.gameObject.name.Contains("Wall") || collision.gameObject.name.Contains("Terrain")) {
 			Rotate(BASE_ROTATE_MAX);
-		}
-		//CarryFood?
-		if (collision.gameObject.name.Contains("Food") && !CarryingFood()) {
-				food = collision.gameObject;
 		}
 		//Ant?
 		if (collision.gameObject.name.Contains("Ant")) {
 			Rotate(BASE_ROTATE_MAX);
+		}
+		//CarryFood?
+		if (collision.gameObject.name.Contains("Food") && !CarryingFood()) {
+			food = collision.gameObject.GetComponent<Rigidbody>();
 		}
 	}
 
@@ -82,7 +85,7 @@ public class ReactiveAnt : MonoBehaviour {
 
 		//If carrying food move it as well
 		if (CarryingFood()) {
-			food.transform.position = rb.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+			food.MovePosition(rb.transform.position + new Vector3(0.0f, 2.0f, 0.0f));
 		}
 	}
 

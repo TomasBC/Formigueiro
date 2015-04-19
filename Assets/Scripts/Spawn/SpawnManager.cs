@@ -11,21 +11,21 @@ public class SpawnManager : MonoBehaviour {
 
 	private int numSpawns = 0; 			// Number of spawns generated
 
-	void Start ()
+	void Start()
 	{
 		// Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
-		InvokeRepeating ("Spawn", spawnTime, spawnTime);
+		InvokeRepeating("Spawn", spawnTime, spawnTime);
 	}
 	
 	
-	void Spawn ()
+	void Spawn()
 	{		
 		// Find a random index between zero and one less than the number of spawn points.
-		int spawnPointIndex = Random.Range (0, spawnPoints.Length);
+		int spawnPointIndex = Random.Range(0, spawnPoints.Length);
 		
 		if(numSpawns < spawnLimit){
 			// Create an instance of the enemy prefab at the randomly selected spawn point's position and rotation.
-			Instantiate (obj, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+			Instantiate(obj, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
 			numSpawns++;
 		}
 	}

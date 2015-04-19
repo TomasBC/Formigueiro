@@ -31,7 +31,7 @@ public class ReactiveQueen : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 
 		//QueenDoor?
-		if (collider.gameObject.name.Contains ("Door")) {
+		if (collider.gameObject.name.Contains("Door")) {
 			Rotate(BASE_ROTATE_MAX);
 		}
 	}
@@ -42,7 +42,6 @@ public class ReactiveQueen : MonoBehaviour {
 		if (collision.gameObject.name.Contains("Wall")) {
 			Rotate(BASE_ROTATE_MAX);
 		}
-
 		//Food?
 		if (collision.gameObject.name.Contains("Food")) {
 
@@ -50,6 +49,10 @@ public class ReactiveQueen : MonoBehaviour {
 				Energy(40.0f);
 			}
 			Destroy(collision.gameObject);
+		}
+		//Ant?
+		if (collision.gameObject.name.Contains("Ant")) {
+			Rotate(BASE_ROTATE_MAX);
 		}
 	}
 	
