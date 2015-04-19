@@ -4,8 +4,11 @@ using System.Collections;
 public class ReactiveQueen : MonoBehaviour {
 
 	//Constant variables
-	public static readonly int SPEED_MAX = 4;
+	public static readonly int SPEED_MAX = 2;
 	public static readonly float ENERGY_MAX = 100.0f;
+
+	public static readonly int BASE_ROTATE_MAX = 3;
+	public static readonly int LOOP_ROTATE_MAX = 200;
 	
 	//Class variables
 	private Rigidbody rb;
@@ -20,24 +23,31 @@ public class ReactiveQueen : MonoBehaviour {
 	
 	void FixedUpdate() {
 		Move();
+		Rotate(LOOP_ROTATE_MAX);
 		Energy(-0.01f); //Lose a bit of energy every frame
 	}
 
 	//Sensors	
+	void OnTriggerEnter(Collider collider){
+
+		//QueenDoor?
+		if (collider.gameObject.name.Contains ("Door")) {
+			Rotate(BASE_ROTATE_MAX);
+		}
+	}
+
 	void OnCollisionEnter(Collision collision) {
 		
-		//Wall collision
+		//Wall?
 		if (collision.gameObject.name.Contains("Wall")) {
-			Rotate();
+			Rotate(BASE_ROTATE_MAX);
 		}
 
+		//Food?
 		if (collision.gameObject.name.Contains("Food")) {
 
 			if(collision.gameObject.name.Contains("Orange")){
-
-				if(energy < ENERGY_MAX){
-					Energy(40.0f);
-				}
+				Energy(40.0f);
 			}
 			Destroy(collision.gameObject);
 		}
@@ -50,9 +60,9 @@ public class ReactiveQueen : MonoBehaviour {
 		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
 	}
 	
-	private void Rotate(){
+	private void Rotate(int max) {
 
-		switch (Random.Range (0, 3)) {
+		switch (Random.Range (0, max)) {
 		case 0:
 			rb.transform.Rotate (0.0f, -90.0f, 0.0f);
 			break;
@@ -68,13 +78,14 @@ public class ReactiveQueen : MonoBehaviour {
 		}
 	}
 
-	public void Energy(float e) {
+	public void Energy(float increment) {
 		
-		energy += e;
+		energy += increment;
 		
 		if(energy > ENERGY_MAX) { //Cap energy to max
 			energy = ENERGY_MAX;
-		}else if (energy < 0.0f) { //Kill if no energy is available
+		}
+		else if (energy < 0.0f) { //Kill if no energy is available
 			Destroy (this.gameObject);
 		}
 	}
