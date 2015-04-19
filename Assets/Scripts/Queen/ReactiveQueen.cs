@@ -68,17 +68,14 @@ public class ReactiveQueen : MonoBehaviour {
 		}
 	}
 
-	public void Energy(float energy) {
+	public void Energy(float e) {
 		
-		//Energy below max
-		if (energy < ENERGY_MAX) {
-			this.energy += energy;
-			
-			if(energy > ENERGY_MAX) { //Cap energy to max
-				energy = ENERGY_MAX;
-			}
-		} else if (energy < 0.0f) { //Kill if no energy is available
-			Destroy (this);
+		energy += e;
+		
+		if(energy > ENERGY_MAX) { //Cap energy to max
+			energy = ENERGY_MAX;
+		}else if (energy < 0.0f) { //Kill if no energy is available
+			Destroy (this.gameObject);
 		}
 	}
 }
