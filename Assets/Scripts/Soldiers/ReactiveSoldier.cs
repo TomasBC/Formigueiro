@@ -5,7 +5,7 @@ public class ReactiveSoldier : MonoBehaviour
 {	
 	//Constant variables
 	public static readonly int SPEED_MAX = 20;
-	public static readonly float ENERGY_MAX = 10.0f;
+	public static readonly float ENERGY_MAX = 100.0f;
 	
 	public static readonly int BASE_ROTATE_MAX = 3;
 	public static readonly int LOOP_ROTATE_MAX = 600;
@@ -29,9 +29,19 @@ public class ReactiveSoldier : MonoBehaviour
 		rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
 		Rotate(LOOP_ROTATE_MAX);
 	}
+
+	void OnTriggerEnter(Collider collider){
+
+		//Door? (Queen Door and Labyrinth)
+		if (collider.gameObject.name.Contains ("Door")) {
+			Rotate(BASE_ROTATE_MAX);
+		}
+	}
+
 	
 	void OnCollisionEnter(Collision collision) {
-		if (collision.gameObject.name.Contains ("Spider")) {
+
+		if (collision.gameObject.name.Contains("Spider")) {
 			collision.gameObject.GetComponent<ReactiveEnemy>().Energy(-5.0f);
 		}
 		if (collision.gameObject.name.Contains("Wall")) {
@@ -46,16 +56,16 @@ public class ReactiveSoldier : MonoBehaviour
 		
 		switch (Random.Range (0, max)) {
 		case 0:
-			rb.transform.Rotate (0.0f, -180.0f, 0.0f);
+			rb.transform.Rotate (0.0f, 90.0f, 0.0f);
 			break;
 		case 1:
 			rb.transform.Rotate (0.0f, 180.0f, 0.0f);
 			break;
 		case 2:
-			rb.transform.Rotate (0.0f, -90.0f, 0.0f);
+			rb.transform.Rotate (0.0f, -180.0f, 0.0f);
 			break;
 		case 3:
-			rb.transform.Rotate (0.0f, 90.0f, 0.0f);
+			rb.transform.Rotate (0.0f, -90.0f, 0.0f);
 			break;
 		}
 	}
@@ -66,7 +76,8 @@ public class ReactiveSoldier : MonoBehaviour
 		
 		if(energy > ENERGY_MAX) { //Cap energy to max
 			energy = ENERGY_MAX;
-		}else if (energy < 0.0f) { //Kill if no energy is available
+		}
+		else if (energy < 0.0f) { //Kill if no energy is available
 			Destroy (this.gameObject);
 		}
 	}
