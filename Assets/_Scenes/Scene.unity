@@ -2292,7 +2292,7 @@ GameObject:
   - 33: {fileID: 1270329685}
   - 65: {fileID: 1270329684}
   m_Layer: 0
-  m_Name: trigger_door
+  m_Name: trigger_wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3138,7 +3138,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 466596, guid: f092864596d4948679452fe28d09a961, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 466596, guid: f092864596d4948679452fe28d09a961, type: 2}
       propertyPath: m_LocalScale.y

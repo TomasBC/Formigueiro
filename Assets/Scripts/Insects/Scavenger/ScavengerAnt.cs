@@ -52,7 +52,7 @@ public class ScavengerAnt : Insect
 
 		//If carrying food move it as well
 		if (CarryingFood()) {
-			food.transform.position = rigidBody.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+			food.transform.position = rigidBody.transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 		}
 	}
 

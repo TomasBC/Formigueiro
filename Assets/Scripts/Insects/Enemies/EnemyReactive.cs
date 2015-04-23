@@ -25,7 +25,7 @@ public class EnemyReactive : Insect {
 
 		//Ant?
 		if (collision.gameObject.name.Contains("ant")) {
-			collision.gameObject.GetComponent<Insect> ().UpdateEnergy(-attackPower); //Attack
+			collision.gameObject.GetComponent<Insect>().UpdateEnergy(-attackPower); //Attack
 			collided = true;
 		}
 		//Food?
