@@ -16,8 +16,7 @@ public class SpawnManager : MonoBehaviour {
 		// Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
 		InvokeRepeating("Spawn", spawnTime, spawnTime);
 	}
-	
-	
+
 	void Spawn()
 	{		
 		// Find a random index between zero and one less than the number of spawn points.
