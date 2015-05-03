@@ -30,7 +30,7 @@ GameObject:
   - 54: {fileID: 5435708}
   m_Layer: 0
   m_Name: ant_queen
-  m_TagString: Ant
+  m_TagString: Queen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

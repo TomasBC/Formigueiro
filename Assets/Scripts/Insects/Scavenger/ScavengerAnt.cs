@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ScavengerAnt : Insect 
 {	
 	// Food
 	protected GameObject food = null;
 	protected Rigidbody foodRigidBody = null;
-
+	
+	public float fieldOfView = 90f;
+	public float longViewDistance = 20f; 
+	public float closeViewDistance = 5f;
+	
 	// Initialization
 	protected override void Start() 
 	{
@@ -63,6 +69,9 @@ public class ScavengerAnt : Insect
 
 		foodRigidBody.useGravity = false;
 		foodRigidBody.freezeRotation = true;
+
+		//Reset rotation
+		transform.rotation = Quaternion.identity;
 	}
 	
 	protected virtual void Unload() 
@@ -77,5 +86,16 @@ public class ScavengerAnt : Insect
 
 		food = null;
 		foodRigidBody = null;
+	}
+
+	protected override GameObject[] CheckFieldOfView() 
+	{
+		//Concat Food and Enemies for checking
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").Concat(GameObject.FindGameObjectsWithTag("Enemy")).ToArray();
+		GameObject[] result;
+
+		result = ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
+
+		return result;
 	}
 }
