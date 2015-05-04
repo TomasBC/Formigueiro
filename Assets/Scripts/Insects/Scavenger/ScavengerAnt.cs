@@ -88,11 +88,11 @@ public class ScavengerAnt : Insect
 		foodRigidBody = null;
 	}
 
-	protected override GameObject[] CheckFieldOfView() 
+	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
 		//Concat Food and Enemies for checking
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").Concat(GameObject.FindGameObjectsWithTag("Enemy")).ToArray();
-		GameObject[] result;
+		Dictionary<string, List<GameObject>> result;
 
 		result = ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
 

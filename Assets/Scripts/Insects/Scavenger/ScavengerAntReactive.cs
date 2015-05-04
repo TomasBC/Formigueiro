@@ -35,16 +35,14 @@ public class ScavengerAntReactive : ScavengerAnt
 
 	protected override void EvaluateFieldOfView()
 	{
-		GameObject[] objsInsideCone = CheckFieldOfView();
+		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
+		List<GameObject> listAux;
 
-		for(int i = 0; i < objsInsideCone.Length; i++) {
-
-			//If we find any sort of food and we are not carrying any, we rotate towards the object
-			if(objsInsideCone[i].tag.Equals("Food") && !CarryingFood()) {
-				RotateTowards(objsInsideCone[i]);
-				proceed = true;
-				break;
-			}
+		//If we find any sort of food and we are not carrying any, we rotate towards the object
+		if(objsInsideCone.TryGetValue("Food", out listAux) && !CarryingFood()) {
+				
+			RotateTowards(listAux[Random.Range(0, listAux.Count)]); //Randomly pick a food object
+			proceed = true;
 		}
 	}
 }

@@ -91,6 +91,6 @@ public class Insect : MonoBehaviour
 	}
 
 	// Function headers to be overrided by subclasses
-	protected virtual GameObject[] CheckFieldOfView() { return null; }
+	protected virtual Dictionary<string, List<GameObject>> CheckFieldOfView()  { return null; }
 	protected virtual void EvaluateFieldOfView() {}
 }

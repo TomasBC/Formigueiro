@@ -32,16 +32,25 @@ public class ViewConeController : MonoBehaviour
 		return false;
 	}
 
-	public static GameObject[] CheckFieldOfView(GameObject obj, GameObject[] objs, float fieldOfView, float longViewDistance, float closeViewDistance) 
+	public static Dictionary<string, List<GameObject>> CheckFieldOfView(GameObject obj, GameObject[] objs, float fieldOfView, float longViewDistance, float closeViewDistance) 
 	{
-		List<GameObject> result = new List<GameObject>();
+		Dictionary<string, List<GameObject>> result = new Dictionary<string, List<GameObject>>();
+		List<GameObject> auxList;
 
 		for(int i = 0; i < objs.Length; i++) {
 			
 			if(ViewConeController.CheckIfInsideCone(obj, objs[i], fieldOfView, longViewDistance, closeViewDistance)) {
-				result.Add(objs[i]);
+
+				if(result.TryGetValue(objs[i].tag, out auxList)) { //If keyTag exists we add the object to the corresponding list
+					auxList.Add(objs[i]);
+					result[objs[i].tag] = auxList;
+				} else { //Otherwise we create a new key and object list
+					auxList = new List<GameObject>();
+					auxList.Add(objs[i]);
+					result.Add(objs[i].tag, auxList);
+				}
 			}
 		}
-		return result.ToArray();
+		return result;
 	}
 }
