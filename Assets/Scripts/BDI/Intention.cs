@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Intention : MonoBehaviour {
+public class Intention {
+	private GameObject intentionObject;
+	public GameObject IntentionObject{
+		get{return intentionObject;}
+	}
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	public Intention(){}
 }
