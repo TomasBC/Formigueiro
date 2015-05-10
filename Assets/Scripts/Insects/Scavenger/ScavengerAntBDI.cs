@@ -18,10 +18,10 @@ public class ScavengerAntBDI : ScavengerAnt {
 	// Reactors
 	protected override void Move() 
 	{
-		if (intention != null && !(intention.Type == BeliefsTypes.FindFood)) {
+		/*if (intention != null && !(intention.Type == BeliefsTypes.FindFood)) {
 			Debug.Log("Entrei");
-			RotateTowards (intention.IntentionObject);
-		} else {
+			RotateTowards (intention.IntentionObject);*/
+		//} else {
 			if (!collided && !proceed) {
 				base.Move (); //Move forward and rotate max
 				Rotate (randomMax);
@@ -32,7 +32,7 @@ public class ScavengerAntBDI : ScavengerAnt {
 				Rotate (randomMin); //Rotate min
 				collided = false;
 			}
-		}
+		//}
 	}
 
 
@@ -50,15 +50,19 @@ public class ScavengerAntBDI : ScavengerAnt {
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView ();
 		List<GameObject> food, enemies, friends;
-		beliefs = new List<Belief> ();
-		desires = new List<Desire> ();
+
+		beliefs.Clear();
+		desires.Clear();
+
 		objsInsideCone.TryGetValue ("Food", out food);
 		objsInsideCone.TryGetValue ("Enemy", out enemies);
 		objsInsideCone.TryGetValue ("Ant", out friends);
 
+		if (CarryingFood ()) {
+			beliefs.Add(new Belief(GameObject.Find("wall_10"), BeliefsTypes.DropFood, 0, 100000));
+		}
 
 		if (food != null && !CarryingFood()) { //Procura Comida
-			Debug.Log("Encontrei comida");
 			foreach (GameObject obj in food){
 				if(!obj.GetComponent<Food>().GetTransport()){
 					if(enemies != null){
@@ -112,15 +116,17 @@ public class ScavengerAntBDI : ScavengerAnt {
 		if (maxDesire != null)
 			futureIntention = new Intention (maxDesire);
 
-		if (futureIntention != null) {
-			Debug.Log("Valor Futura " + futureIntention.IntentionValue + " antiga " + intention.IntentionValue);
-		}
-
 		if (futureIntention != null && (futureIntention.IntentionValue >= intention.IntentionValue)) {
 			intention = futureIntention;
-			Debug.Log("Adicionei uma Intenção");
 			if(intention.Type == BeliefsTypes.CatchFood)
 				proceed = true;
+			if(intention.Type == BeliefsTypes.CatchFood || intention.Type == BeliefsTypes.DropFood){
+				RotateTowards(intention.IntentionObject);
+				proceed = true;
+			}
+			if(intention.Type == BeliefsTypes.Run){
+				proceed = true;
+			}
 		}
 			
 	}
