@@ -3,8 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Belief {
+
 	protected BeliefsTypes type;
+
+	public BeliefsTypes Type {
+		get {
+			return type;
+		}
+	}
+
 	protected GameObject beliefObject;
+
+	public GameObject BeliefObject {
+		get {
+			return beliefObject;
+		}
+	}
 
 	protected int enemiesCount;
 	public int EnemiesCount{

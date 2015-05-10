@@ -6,5 +6,6 @@ public enum BeliefsTypes {
 	CatchFood,
 	DropFood,
 	Run,
-	Follow
+	Follow,
+	FindFood
 }

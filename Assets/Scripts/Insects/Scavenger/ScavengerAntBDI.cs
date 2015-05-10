@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScavengerAntBDI : ScavengerAntReactive {
+public class ScavengerAntBDI : ScavengerAnt {
 	// Initialization
 	private List<Belief> beliefs;
 	private List<Desire> desires;
@@ -18,7 +18,8 @@ public class ScavengerAntBDI : ScavengerAntReactive {
 	// Reactors
 	protected override void Move() 
 	{
-		if (intention != null) {
+		if (intention != null && !(intention.Type == BeliefsTypes.FindFood)) {
+			Debug.Log("Entrei");
 			RotateTowards (intention.IntentionObject);
 		} else {
 			if (!collided && !proceed) {
@@ -41,37 +42,87 @@ public class ScavengerAntBDI : ScavengerAntReactive {
 		base.FixedUpdate();
 		EvaluateFieldOfView(); //Evaluate view cone
 		evalBeliefs ();
+		evalDesires ();
 		Move();
 	}
 
 	protected override void EvaluateFieldOfView()
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView ();
-		List<GameObject> listAux;
+		List<GameObject> food, enemies, friends;
+		beliefs = new List<Belief> ();
+		desires = new List<Desire> ();
+		objsInsideCone.TryGetValue ("Food", out food);
+		objsInsideCone.TryGetValue ("Enemy", out enemies);
+		objsInsideCone.TryGetValue ("Ant", out friends);
 
-		//If we find any sort of food and we are not carrying any, we rotate towards the object
 
-		if (objsInsideCone ["Food"].Count != 0) {
-			if (CarryingFood ())
-				foreach (GameObject obj in objsInsideCone ["Food"])
-					beliefs.Add (new Belief (obj, BeliefsTypes.CatchFood, objsInsideCone ["Enemy"].Count, objsInsideCone ["Ant"].Count));
-			else {
-				foreach (GameObject obj in objsInsideCone ["Food"])
-					beliefs.Add (new Belief (obj, BeliefsTypes.CatchFood, objsInsideCone ["Enemy"].Count, objsInsideCone ["Ant"].Count));
+		if (food != null && !CarryingFood()) { //Procura Comida
+			Debug.Log("Encontrei comida");
+			foreach (GameObject obj in food){
+				if(!obj.GetComponent<Food>().GetTransport()){
+					if(enemies != null){
+							if(friends != null)
+								beliefs.Add (new Belief (obj, BeliefsTypes.CatchFood, enemies.Count, friends.Count));
+							else
+								beliefs.Add (new Belief (obj, BeliefsTypes.CatchFood, enemies.Count, 0));
+					}else
+						beliefs.Add (new Belief (obj, BeliefsTypes.CatchFood, 0, 0));
+				}
 			}
-			/*if (objsInsideCone ["Enemy"].Count != 0) {
+		}
+
+		if (enemies != null) { //Inimigos perto
+			foreach (GameObject obj in enemies){
+//				if(friends != null)
+//					beliefs.Add (new Belief (obj, BeliefsTypes.Run, enemies.Count, friends.Count));
+//				else
+					beliefs.Add (new Belief (obj, BeliefsTypes.Run, enemies.Count, 0));
+					break;
+			}
+		}
+
+		if (beliefs.Count == 0) {
+			intention = new Intention(new Desire(new Belief(null, BeliefsTypes.FindFood, 0,0)));
+		}
+
+
+		/*if (objsInsideCone ["Enemy"].Count != 0) {
 			foreach(GameObject obj in objsInsideCone ["Enemy"]){
 				belief.Add(new Belief(obj, BeliefsTypes.Attack));
 				belief.Add(new Belief(obj, BeliefsTypes.Run));
 			}
 		}*/
-			proceed = true;
-		}
 	}
 
 	private void evalBeliefs(){
 		foreach (Belief b in beliefs)
 			desires.Add(new Desire(b));
+	}
+	private void evalDesires(){
+		float desireValue = -1000;
+		Intention futureIntention = null;
+		Desire maxDesire = null;
+		foreach (Desire d in desires) {
+			if (d.DesireValue > desireValue) {
+				maxDesire = d;
+				desireValue = d.DesireValue;
+			}
+		}
+		if (maxDesire != null)
+			futureIntention = new Intention (maxDesire);
+
+		if (futureIntention != null) {
+			Debug.Log("Valor Futura " + futureIntention.IntentionValue + " antiga " + intention.IntentionValue);
+		}
+
+		if (futureIntention != null && (futureIntention.IntentionValue >= intention.IntentionValue)) {
+			intention = futureIntention;
+			Debug.Log("Adicionei uma Intenção");
+			if(intention.Type == BeliefsTypes.CatchFood)
+				proceed = true;
+		}
+			
 	}
 
 }

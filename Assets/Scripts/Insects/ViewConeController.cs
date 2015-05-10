@@ -23,7 +23,6 @@ public class ViewConeController : MonoBehaviour
 			if(Physics.Raycast(rayOrigin, rayDirection, out hit, longViewDistance)) {
 
 				if(hit.collider.gameObject == objToCompareTo) {
-					Debug.Log (objToCompareTo.transform.position);
 					return true; //Can see the object
 				} else {
 					return false; //Can't see the object
