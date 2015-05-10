@@ -87,76 +87,6 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &104549691
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 28
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 144
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: -1.62920685e-07
-      objectReference: {fileID: 0}
-    - target: {fileID: 449010, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 11444552, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: fieldOfView
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 11444552, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: longViewDistance
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 11444552, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: closeViewDistance
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2312540, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11444552, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6526140, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_Size.y
-      value: .800000012
-      objectReference: {fileID: 0}
-    - target: {fileID: 6526140, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-      propertyPath: m_Center.y
-      value: .449999988
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &118905789
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,7 +100,7 @@ GameObject:
   - 23: {fileID: 118905791}
   m_Layer: 0
   m_Name: wall_9
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -314,7 +244,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!114 &130376658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,7 +328,34 @@ Transform:
   - {fileID: 619687961}
   - {fileID: 1564431086}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
+--- !u!1 &190937174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 190937175}
+  m_Layer: 0
+  m_Name: soldiers_spawn_point_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &190937175
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 190937174}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 26, y: 0, z: 152}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1945783452}
+  m_RootOrder: 3
 --- !u!1 &212547131
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,7 +369,7 @@ GameObject:
   - 23: {fileID: 212547133}
   m_Layer: 0
   m_Name: wall_2
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -518,7 +475,7 @@ GameObject:
   - 65: {fileID: 353905842}
   m_Layer: 0
   m_Name: east_lake_wall_4
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -618,7 +575,7 @@ GameObject:
   - 23: {fileID: 366211014}
   m_Layer: 0
   m_Name: east_top_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -760,6 +717,10 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 9485b0c79d11e2e4d0007da98d76c639, type: 2}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9485b0c79d11e2e4d0007da98d76c639, type: 2}
   m_IsPrefabParent: 0
@@ -776,7 +737,7 @@ GameObject:
   - 23: {fileID: 554697241}
   m_Layer: 9
   m_Name: queen_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -893,7 +854,7 @@ Transform:
   - {fileID: 2091303470}
   - {fileID: 1945783452}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!1 &619687960
 GameObject:
   m_ObjectHideFlags: 0
@@ -945,7 +906,7 @@ GameObject:
   - 23: {fileID: 622478226}
   m_Layer: 0
   m_Name: wall_14
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1018,7 +979,7 @@ GameObject:
   - 23: {fileID: 644017631}
   m_Layer: 0
   m_Name: wall_8
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1150,8 +1111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 117952, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-  spawnLimit: 0
-  spawnTime: 1
+  spawnLimit: 5
+  spawnTime: 2
   spawnPoints:
   - {fileID: 1780853235}
   - {fileID: 1000221782}
@@ -1214,6 +1175,7 @@ Transform:
   - {fileID: 558039261}
   - {fileID: 944211119}
   - {fileID: 364110535}
+  - {fileID: 827706843}
   m_Father: {fileID: 611346301}
   m_RootOrder: 1
 --- !u!114 &743391861
@@ -1228,12 +1190,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 156344, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-  spawnLimit: 0
+  spawnLimit: 10
   spawnTime: 2
   spawnPoints:
   - {fileID: 558039261}
   - {fileID: 944211119}
   - {fileID: 364110535}
+  - {fileID: 827706843}
 --- !u!1 &768729136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,7 +1210,7 @@ GameObject:
   - 65: {fileID: 768729138}
   m_Layer: 0
   m_Name: south_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1307,6 +1270,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 619687961}
   m_RootOrder: 2
+--- !u!1 &827706842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 827706843}
+  m_Layer: 0
+  m_Name: scavenger_spawn_point_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &827706843
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 827706842}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 26, y: 0, z: 152}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 743391860}
+  m_RootOrder: 3
 --- !u!1 &868660770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,7 +1310,7 @@ GameObject:
   - 23: {fileID: 868660772}
   m_Layer: 0
   m_Name: wall_7
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1410,7 +1400,7 @@ Transform:
   - {fileID: 1197240623}
   - {fileID: 1270329683}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!1 &902308559
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,7 +1414,7 @@ GameObject:
   - 23: {fileID: 902308561}
   m_Layer: 0
   m_Name: wall_3
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1497,7 +1487,7 @@ GameObject:
   - 23: {fileID: 904761991}
   m_Layer: 0
   m_Name: wall_6
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1597,7 +1587,7 @@ GameObject:
   - 65: {fileID: 964358283}
   m_Layer: 0
   m_Name: east_lake_wall_5
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1684,48 +1674,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 697472602}
   m_RootOrder: 1
---- !u!1001 &1004037351
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 38.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: .5
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 107.300003
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 482816, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1033256566
 GameObject:
   m_ObjectHideFlags: 0
@@ -1739,7 +1687,7 @@ GameObject:
   - 23: {fileID: 1033256568}
   m_Layer: 0
   m_Name: wall_5
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1812,7 +1760,7 @@ GameObject:
   - 65: {fileID: 1060921291}
   m_Layer: 0
   m_Name: east_lake_wall_1
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1885,7 +1833,7 @@ GameObject:
   - 65: {fileID: 1064690271}
   m_Layer: 0
   m_Name: west_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1958,7 +1906,7 @@ GameObject:
   - 23: {fileID: 1070220050}
   m_Layer: 0
   m_Name: wall_16
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2031,7 +1979,7 @@ GameObject:
   - 23: {fileID: 1084148649}
   m_Layer: 0
   m_Name: wall_13
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2187,7 +2135,7 @@ GameObject:
   - 65: {fileID: 1213919987}
   m_Layer: 0
   m_Name: east_lake_wall_6
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2260,7 +2208,7 @@ GameObject:
   - 23: {fileID: 1235849247}
   m_Layer: 0
   m_Name: north_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2333,7 +2281,7 @@ GameObject:
   - 23: {fileID: 1247703191}
   m_Layer: 0
   m_Name: wall_10
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2405,7 +2353,7 @@ GameObject:
   - 65: {fileID: 1270329684}
   m_Layer: 0
   m_Name: trigger_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2454,7 +2402,7 @@ GameObject:
   - 65: {fileID: 1298713651}
   m_Layer: 0
   m_Name: north_wall_2
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2527,7 +2475,7 @@ GameObject:
   - 65: {fileID: 1327056758}
   m_Layer: 0
   m_Name: east_lake_wall_3
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2627,7 +2575,7 @@ GameObject:
   - 23: {fileID: 1360102844}
   m_Layer: 0
   m_Name: west_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2700,7 +2648,7 @@ GameObject:
   - 65: {fileID: 1410518458}
   m_Layer: 0
   m_Name: east_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2827,7 +2775,7 @@ GameObject:
   - 23: {fileID: 1458809517}
   m_Layer: 0
   m_Name: wall_15
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2943,7 +2891,7 @@ GameObject:
   - 65: {fileID: 1472462816}
   m_Layer: 0
   m_Name: east_lake_wall_2
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3016,7 +2964,7 @@ GameObject:
   - 23: {fileID: 1526025548}
   m_Layer: 0
   m_Name: east_bottom_wall_2
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3089,7 +3037,7 @@ GameObject:
   - 23: {fileID: 1538718921}
   m_Layer: 0
   m_Name: wall_12
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3212,7 +3160,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!1001 &1637574957
 Prefab:
   m_ObjectHideFlags: 0
@@ -3303,7 +3251,7 @@ GameObject:
   - 23: {fileID: 1817380620}
   m_Layer: 0
   m_Name: wall_1
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3376,7 +3324,7 @@ GameObject:
   - 23: {fileID: 1875519321}
   m_Layer: 0
   m_Name: wall_11
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3465,6 +3413,7 @@ Transform:
   - {fileID: 1351891504}
   - {fileID: 457154206}
   - {fileID: 1445347349}
+  - {fileID: 190937175}
   m_Father: {fileID: 611346301}
   m_RootOrder: 3
 --- !u!114 &1945783453
@@ -3479,12 +3428,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 177662, guid: 3669a7d05824c455c87d2298173785b4, type: 2}
-  spawnLimit: 0
+  spawnLimit: 10
   spawnTime: 4
   spawnPoints:
   - {fileID: 1351891504}
   - {fileID: 457154206}
   - {fileID: 1445347349}
+  - {fileID: 190937175}
 --- !u!1 &1947754521
 GameObject:
   m_ObjectHideFlags: 0
@@ -3525,7 +3475,7 @@ GameObject:
   - 65: {fileID: 1956947634}
   m_Layer: 0
   m_Name: north_wall_1
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3598,7 +3548,7 @@ GameObject:
   - 23: {fileID: 2004473607}
   m_Layer: 0
   m_Name: east_bottom_wall_1
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3671,7 +3621,7 @@ GameObject:
   - 23: {fileID: 2063827200}
   m_Layer: 0
   m_Name: south_wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3744,7 +3694,7 @@ GameObject:
   - 23: {fileID: 2073043857}
   m_Layer: 0
   m_Name: wall_4
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3874,8 +3824,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 141390, guid: 866beb6ac94310c4bb966d0d81e5ab15, type: 2}
-  spawnLimit: 0
-  spawnTime: 2
+  spawnLimit: 5
+  spawnTime: 3
   spawnPoints:
   - {fileID: 1106055641}
   - {fileID: 680862151}

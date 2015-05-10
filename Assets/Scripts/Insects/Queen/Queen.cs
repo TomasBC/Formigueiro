@@ -21,9 +21,9 @@ public class Queen : Insect {
 		base.OnCollisionEnter(collision);
 
 		//Food?
-		if (collision.gameObject.name.Contains("food")) {
+		if (collision.gameObject.tag.Equals("Food")) {
 		
-			//TODO: Update energy
+			UpdateEnergy(collision.gameObject.GetComponent<Food>().ConsumeEnergy(1)); // Gather all the remaining energy
 			Destroy(collision.gameObject);
 		}
 	}

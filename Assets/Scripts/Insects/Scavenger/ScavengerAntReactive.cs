@@ -41,8 +41,14 @@ public class ScavengerAntReactive : ScavengerAnt
 		//If we find any sort of food and we are not carrying any, we rotate towards the object
 		if(objsInsideCone.TryGetValue("Food", out listAux) && !CarryingFood()) {
 				
-			RotateTowards(listAux[Random.Range(0, listAux.Count)]); //Randomly pick a food object
-			proceed = true;
+			for(int i = 0; i < listAux.Count; i++) {
+
+				if(!listAux[i].GetComponent<Food>().GetTransport()) {
+					RotateTowards(listAux[i]); //Randomly pick a food object
+					proceed = true;
+					break;
+				}
+			}
 		}
 	}
 }

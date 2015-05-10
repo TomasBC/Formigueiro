@@ -33,12 +33,21 @@ public class Insect : MonoBehaviour
 		UpdateEnergy(frameEnergyLoss);
 		Death();
 	}
-	
+
+
+	protected virtual void OnTriggerEnter(Collider collider) 
+	{
+		//Trigger Wall?
+		if (collider.gameObject.tag.Equals("Wall")) {
+			collided = true;
+		}
+	}
+
 	protected virtual void OnCollisionEnter(Collision collision) 
 	{
 		//SameInsect? or Wall?
 		if (collision.gameObject.tag.Equals(this.gameObject.tag) ||
-		    collision.gameObject.name.Contains("wall")) {
+		    collision.gameObject.tag.Equals("Wall")) {
 			collided = true;
 		}
 	}
@@ -86,7 +95,7 @@ public class Insect : MonoBehaviour
 	protected void Death() 
 	{
 		if (energy <= 0.0f) {
-			Destroy(this);
+			Destroy(gameObject);
 		}
 	}
 

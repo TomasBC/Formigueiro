@@ -1,9 +1,15 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyReactive : Insect {
 
 	public float attackPower = 5.0f;
+
+	public float fieldOfView = 90f;
+	public float longViewDistance = 20f; 
+	public float closeViewDistance = 5f;
 
 	// Initialization
 	protected override void Start() 
@@ -15,6 +21,7 @@ public class EnemyReactive : Insect {
 	protected override void FixedUpdate() 
 	{
 		base.FixedUpdate();
+		EvaluateFieldOfView();
 		Move();
 	}
 
@@ -24,12 +31,14 @@ public class EnemyReactive : Insect {
 		base.OnCollisionEnter(collision);
 
 		//Ant?
-		if (collision.gameObject.name.Contains("ant")) {
+		if (collision.gameObject.tag.Equals("Ant")) {
 			collision.gameObject.GetComponent<Insect>().UpdateEnergy(-attackPower); //Attack
+			UpdateEnergy(attackPower * 0.5f); // Gain energy with the attack
+
 			collided = true;
 		}
 		//Food?
-		if (collision.gameObject.name.Contains("food")) {
+		if (collision.gameObject.tag.Equals("Food")) {
 			collided = true;
 		}
 	}
@@ -37,12 +46,39 @@ public class EnemyReactive : Insect {
 	// Reactors
 	protected override void Move() 
 	{
-		if (!collided) {
-			base.Move(); // Move forward
+		if(!collided && !proceed) {
+			base.Move(); //Move forward and rotate max
 			Rotate(randomMax);
+		} else if(!collided && proceed) {
+			base.Move(); //Move forward
+			proceed = false;
 		} else {
-			Rotate(randomMin);
+			Rotate(randomMin); //Rotate min
 			collided = false;
+		}
+	}
+
+	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
+	{
+		//Concat Food and Enemies for checking
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("Ant").ToArray();
+		Dictionary<string, List<GameObject>> result;
+
+		result = ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
+
+		return result;
+	}
+
+	protected override void EvaluateFieldOfView()
+	{
+		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
+		List<GameObject> listAux;
+
+		//If we find any ant and we are not carrying any, we rotate towards the object
+		if(objsInsideCone.TryGetValue("Ant", out listAux)) {
+
+			RotateTowards(listAux[Random.Range(0, listAux.Count)]); //Randomly pick a ant
+			proceed = true;
 		}
 	}
 }

@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Food
   - Queen
+  - Wall
+  - Unload
   layers:
   - Default
   - TransparentFX

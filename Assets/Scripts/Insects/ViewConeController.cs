@@ -8,7 +8,7 @@ public class ViewConeController : MonoBehaviour
 	{
 		RaycastHit hit; //Out hit
 		Vector3 rayDirection = objToCompareTo.transform.position - obj.transform.position;
-	
+
 		// If the objToCompareTo is close to this object and is in front of it, then return true
 		if(Vector3.Angle(rayDirection, obj.transform.forward) < 90 && Vector3.Distance(obj.transform.position, objToCompareTo.transform.position) <= closeViewDistance) {
 			return true;
@@ -23,6 +23,7 @@ public class ViewConeController : MonoBehaviour
 			if(Physics.Raycast(rayOrigin, rayDirection, out hit, longViewDistance)) {
 
 				if(hit.collider.gameObject == objToCompareTo) {
+					Debug.Log (objToCompareTo.transform.position);
 					return true; //Can see the object
 				} else {
 					return false; //Can't see the object

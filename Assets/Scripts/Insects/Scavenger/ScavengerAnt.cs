@@ -40,12 +40,13 @@ public class ScavengerAnt : Insect
 		base.OnCollisionEnter(collision);
 
 		//CarryFood?
-		if (collision.gameObject.gameObject.name.Contains("food") && !CarryingFood()) {
+		if (collision.gameObject.tag.Equals("Food") && !CarryingFood()) {
 			Load(collision);
+
 		}
 
 		//QueenWall?
-		if (collision.gameObject.name.Contains("queen_wall") && CarryingFood()) {
+		if (collision.gameObject.tag.Equals("Unload") && CarryingFood()) {
 			Unload();
 			collided = true;
 		}
@@ -58,7 +59,7 @@ public class ScavengerAnt : Insect
 
 		//If carrying food move it as well
 		if (CarryingFood()) {
-			food.transform.position = rigidBody.transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+			foodRigidBody.transform.position = rigidBody.transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 		}
 	}
 
@@ -66,6 +67,9 @@ public class ScavengerAnt : Insect
 	{
 		food = collision.gameObject;
 		foodRigidBody = food.GetComponent<Rigidbody>();
+
+		UpdateEnergy(food.GetComponent<Food>().ConsumeEnergy(0.2f)); // Gather 20% of the food energy
+		food.GetComponent<Food>().SetTransport(true);
 
 		foodRigidBody.useGravity = false;
 		foodRigidBody.freezeRotation = true;
@@ -76,13 +80,12 @@ public class ScavengerAnt : Insect
 	
 	protected virtual void Unload() 
 	{
-		//TODO: Gather energy before unloading the object
-		
 		//Throw food
 		foodRigidBody.useGravity = true;
 		foodRigidBody.freezeRotation = false;
 
-		food.GetComponent<Rigidbody>().AddForce(rigidBody.transform.forward * 150.0f);
+		foodRigidBody.AddForce(rigidBody.transform.forward * 150.0f);
+		food.GetComponent<Food>().SetTransport(false);
 
 		food = null;
 		foodRigidBody = null;
@@ -91,7 +94,7 @@ public class ScavengerAnt : Insect
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
 		//Concat Food and Enemies for checking
-		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").Concat(GameObject.FindGameObjectsWithTag("Enemy")).ToArray();
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").ToArray();
 		Dictionary<string, List<GameObject>> result;
 
 		result = ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
