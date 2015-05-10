@@ -46,10 +46,10 @@ public class EnemyReactive : Insect {
 	// Reactors
 	protected override void Move() 
 	{
-		if(!collided && !proceed) {
+		if (!collided && !proceed) {
 			base.Move(); //Move forward and rotate max
 			Rotate(randomMax);
-		} else if(!collided && proceed) {
+		} else if (!collided && proceed) {
 			base.Move(); //Move forward
 			proceed = false;
 		} else {
@@ -60,7 +60,7 @@ public class EnemyReactive : Insect {
 
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
-		//Concat Food and Enemies for checking
+		//Get active ants
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Ant").ToArray();
 		Dictionary<string, List<GameObject>> result;
 
@@ -74,8 +74,8 @@ public class EnemyReactive : Insect {
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
 		List<GameObject> listAux;
 
-		//If we find any ant and we are not carrying any, we rotate towards the object
-		if(objsInsideCone.TryGetValue("Ant", out listAux)) {
+		//If we find any ant, we rotate towards it
+		if (objsInsideCone.TryGetValue("Ant", out listAux)) {
 
 			RotateTowards(listAux[Random.Range(0, listAux.Count)]); //Randomly pick a ant
 			proceed = true;

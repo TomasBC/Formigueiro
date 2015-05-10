@@ -12,6 +12,8 @@ public class ScavengerAnt : Insect
 	public float fieldOfView = 90f;
 	public float longViewDistance = 20f; 
 	public float closeViewDistance = 5f;
+
+	protected bool run = false;
 	
 	// Initialization
 	protected override void Start() 
@@ -69,7 +71,7 @@ public class ScavengerAnt : Insect
 		foodRigidBody = food.GetComponent<Rigidbody>();
 
 		UpdateEnergy(food.GetComponent<Food>().ConsumeEnergy(0.2f)); // Gather 20% of the food energy
-		food.GetComponent<Food>().SetTransport(true);
+		food.GetComponent<Food>().Transport = true;
 
 		foodRigidBody.useGravity = false;
 		foodRigidBody.freezeRotation = true;
@@ -85,7 +87,7 @@ public class ScavengerAnt : Insect
 		foodRigidBody.freezeRotation = false;
 
 		foodRigidBody.AddForce(rigidBody.transform.forward * 150.0f);
-		food.GetComponent<Food>().SetTransport(false);
+		food.GetComponent<Food>().Transport = false;
 
 		food = null;
 		foodRigidBody = null;
@@ -93,12 +95,9 @@ public class ScavengerAnt : Insect
 
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
-		//Concat Food and Enemies for checking
+		//Get active food
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").ToArray();
-		Dictionary<string, List<GameObject>> result;
 
-		result = ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
-
-		return result;
+		return ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
 	}
 }

@@ -1,30 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Desire {
-	private float danger, confidence;
+public class Desire 
+{
 	private Belief belief;
 
-	public Belief Belief {
-		get {
-			return belief;
-		}
-	}
-
+	private float danger;
+	private float confidence;
 	private float desireValue;
 
-	public float DesireValue {
-		get {
-			return desireValue;
-		}
-	}
-
-	public Desire(Belief belief){
+	// Constructor
+	public Desire(Belief belief, float danger, float confidence)
+	{
 		this.belief = belief;
-		danger = belief.EnemiesCount * 10;
-		confidence = belief.FriendsCount * 5;
-		desireValue = confidence - danger;
+		this.danger = danger;
+		this.confidence = confidence;
+		this.desireValue = confidence - danger;
 	}
 
+	// Getters
+	public Belief Belief 
+	{
+		get { return belief; }
+	}
 
+	public float Danger 
+	{
+		get { return danger; }
+	}
+
+	public float Confidence 
+	{
+		get { return confidence; }
+	}
+
+	public float DesireValue 
+	{
+		get { return desireValue; }
+	}
 }

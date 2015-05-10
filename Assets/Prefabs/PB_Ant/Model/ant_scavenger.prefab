@@ -28,6 +28,7 @@ GameObject:
   - 65: {fileID: 6526140}
   - 54: {fileID: 5491862}
   - 114: {fileID: 11444552}
+  - 114: {fileID: 11453448}
   m_Layer: 0
   m_Name: ant_scavenger
   m_TagString: Ant
@@ -124,7 +125,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 156344}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91e648ce102c14229b37a2a1316202eb, type: 3}
   m_Name: 
@@ -135,6 +136,32 @@ MonoBehaviour:
   frameEnergyLoss: -.00100000005
   randomMin: 3
   randomMax: 250
+  fieldOfView: 90
+  longViewDistance: 20
+  closeViewDistance: 5
+--- !u!114 &11453448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7602ad20e7d7349e6935c49f5a0f6835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20
+  energy: 100
+  maxEnergy: 100
+  frameEnergyLoss: -.00100000005
+  randomMin: 3
+  randomMax: 250
+  fieldOfView: 90
+  longViewDistance: 20
+  closeViewDistance: 5
+  desireValue: -1000
+  enemyImpact: 10
+  friendsImpact: 5
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
