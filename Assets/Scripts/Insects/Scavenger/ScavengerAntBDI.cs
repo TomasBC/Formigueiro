@@ -9,7 +9,7 @@ public class ScavengerAntBDI : ScavengerAnt
 	public int enemyImpact = 10;
 	public int friendsImpact = 5;
 
-	private bool nav = false;
+	private bool navigation = false;
 	private Vector3 eulerAngleVelocity;
 
 	private NavMeshAgent navAgent;
@@ -48,20 +48,65 @@ public class ScavengerAntBDI : ScavengerAnt
 	// Reactors
 	protected override void Move() 
 	{
-		if (!nav) {
+		/*
+		 * Path finding navigation:
+		 * 
+		 * 1º situation - occurs when the agent (scavenger ant), just 
+		 * spawned inside the labyrinth and needs to find its way out.
+		 * 
+		 * 2º situation - occurs when the agent carries some piece of
+		 * food and needs to get back to the labyrinth to unload it.
+		 * 
+		 */
+		if (navigation) {
 
-			if (!collided && !proceed) {
-				base.Move (); //Move forward and rotate max
-				Rotate (randomMax);
-			} else if (!collided && proceed) {
-				base.Move (); //Move forward
-				proceed = false;
-			} else {
-				Rotate (randomMin); //Rotate min
-				collided = false;
-			}
-		} else {
+			Transform intentionDest = intention.IntentionDest;
+			navAgent.destination = intentionDest.position;
 			Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);
+		}
+
+		/*
+		 *  Colision situation:
+		 *
+		 *	This situation occurs when the agent colides with some obstacle,
+		 *	i.e walls, enemies, ants, and provides a random rotation across
+		 *	three different values (90º, -90º, 180º). This allows the agent
+		 *	to proceed with its actions.
+		 * 
+		 */
+		else if (collided && !proceed) {
+
+			Rotate(randomMin);
+			collided = false;
+		}
+
+		/*
+		 * Proceed situation:
+		 * 
+		 * This situation occurs when the agent has an intention i.e
+		 * grabbing food, run...and provides the correct orientation
+		 * for the task fulfilment, rotating the agent and moving it.
+		 * This relies on the view cone evaluation.
+		 * 
+		 */
+		else if (!collided && proceed) {
+
+			RotateTowards(intention.IntentionDest);
+			base.Move(); //Move forward
+			proceed = false;
+		} 
+
+		/*
+		 * Generic move situation:
+		 * 
+		 * This happens when the agent (scavenger ant), doesn't really
+		 * know its purpose i.e, no beliefs exist. The agent randomly
+		 * navigates across the map using a randomMax value for rotation.
+		 * 
+		 */ 
+		else {				
+			base.Move();
+			Rotate(randomMax);
 		}
 	}
 
@@ -157,16 +202,9 @@ public class ScavengerAntBDI : ScavengerAnt
 
 				switch (intention.Type) {
 				case DesireType.FindFood:
-
-					Transform intentionDest = intention.IntentionDest;
-
-					if(intentionDest != null) {
-						nav = true;
-						navAgent.destination = intentionDest.position;
-					}
+					if(intention.IntentionDest != null) { navigation = true; } //Check if destination exists
 					break;
 				case DesireType.CatchFood:
-					RotateTowards(intention.IntentionDest);
 					proceed = true;
 					break;
 				case DesireType.DropFood:

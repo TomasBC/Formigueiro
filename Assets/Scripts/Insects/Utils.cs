@@ -54,8 +54,7 @@ public class Utils : MonoBehaviour
 		}
 		return result;
 	}
-
-
+	
 	// Method that provides smooth navigation for a certain navAgent
 	public static void SmoothNavigationRot(NavMeshAgent navAgent, Rigidbody rb, Vector3 eulerAngleVelocity) 
 	{	
