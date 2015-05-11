@@ -72,8 +72,8 @@ public class Insect : MonoBehaviour
 			transform.Rotate(0.0f, -90.0f, 0.0f);
 			break;
 		case 3:
-			transform.rotation = Quaternion.identity;
-			break;
+			transform.rotation = Quaternion.identity; //Reset rotation
+			break; 
 		}
 	}
 

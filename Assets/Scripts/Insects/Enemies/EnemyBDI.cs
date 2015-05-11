@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EnemyBDI : Insect {
-	private List<Belief> beliefs;
+
+	private List<Desire> desires;
 	public float attackPower = 5.0f;
 
 	public float fieldOfView = 90f;
@@ -15,7 +16,7 @@ public class EnemyBDI : Insect {
 	protected override void Start() 
 	{
 		base.Start();
-	//	beliefs = new List<string> ();
+		//desires = new List<Desire>();
 	}
 	
 	// Called every fixed framerate frame

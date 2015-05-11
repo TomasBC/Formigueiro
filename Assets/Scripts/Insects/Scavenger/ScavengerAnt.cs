@@ -10,11 +10,11 @@ public class ScavengerAnt : Insect
 	protected Rigidbody foodRigidBody = null;
 	
 	public float fieldOfView = 90f;
-	public float longViewDistance = 20f; 
+	public float longViewDistance = 25f; 
 	public float closeViewDistance = 5f;
 
 	protected bool run = false;
-	
+
 	// Initialization
 	protected override void Start() 
 	{
@@ -44,7 +44,6 @@ public class ScavengerAnt : Insect
 		//CarryFood?
 		if (collision.gameObject.tag.Equals("Food") && !CarryingFood()) {
 			Load(collision);
-
 		}
 
 		//QueenWall?

@@ -14,14 +14,12 @@ public class ScavengerAntBDI : ScavengerAnt
 	private List<GameObject> enemies;
 
 	private Intention intention;
-	private List<Belief> beliefs;
 	private List<Desire> desires;
 
 	// Initialization
 	protected override void Start() 
 	{
 		base.Start();
-		beliefs = new List<Belief>();
 		desires = new List<Desire>();
 	}
 
@@ -29,7 +27,6 @@ public class ScavengerAntBDI : ScavengerAnt
 	protected override void FixedUpdate() 
 	{
 		base.FixedUpdate();
-		EvaluateFieldOfView(); //Evaluate view cone
 		EvalBeliefs();
 		EvalDesires();
 		Move();
@@ -41,7 +38,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		if (!collided && !proceed) {
 			base.Move(); //Move forward and rotate max
 			Rotate(randomMax);
-		} else if (!collided && proceed) {
+		} else if (!collided && (proceed || run)) {
 			base.Move(); //Move forward
 			proceed = false;
 		} else {
@@ -49,19 +46,36 @@ public class ScavengerAntBDI : ScavengerAnt
 			collided = false;
 		}
 	}
-	
-	protected override void EvaluateFieldOfView()
+
+	// BDI Evaluators	
+	protected void EvalBeliefs()
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
 
 		// Clear beliefs and desires
-		beliefs.Clear();
 		desires.Clear();
 
-		// Gather information about: Food, Ants (Friends) and Enemies
+		// Gather information about beliefs: Food, Ants (Friends) and Enemies
 		objsInsideCone.TryGetValue("Food", out foood);
 		objsInsideCone.TryGetValue("Ant", out friends);
 		objsInsideCone.TryGetValue("Enemy", out enemies);
+
+		// Calculate danger and confidence
+		float danger = 0f;
+		float confidence = 0f;
+
+		if (enemies != null) {
+			danger = enemies.Count * enemyImpact;
+		}
+
+		if (friends != null) {
+			confidence = friends.Count * friendsImpact;
+		}
+
+		// If we are carrying food
+		if (CarryingFood()) {
+			desires.Add(new Desire(DesireType.DropFood, null, 0, 0));
+		}
 
 		// If we see some food and we are not carrying any
 		if (foood != null && !CarryingFood()) {
@@ -69,7 +83,7 @@ public class ScavengerAntBDI : ScavengerAnt
 			foreach (GameObject obj in foood) {
 				//If food is not being transported
 				if (!obj.GetComponent<Food>().Transport) {
-					beliefs.Add(new Belief(obj, BeliefType.CatchFood)); //Add catch food belief
+					desires.Add(new Desire(DesireType.CatchFood, obj, danger, confidence)); //Add catch food belief
 				}
 			}
 		}
@@ -77,33 +91,18 @@ public class ScavengerAntBDI : ScavengerAnt
 		if (enemies != null) { //Nearby enemies
 
 			foreach (GameObject obj in enemies) {
-				beliefs.Add(new Belief(obj, BeliefType.Run)); //Add run belief
+				desires.Add(new Desire(DesireType.Run, obj, danger, confidence)); //Add run belief
 			}
 		}
 
-		// Check if we have any beliefs		         
-		if (beliefs.Count == 0) {
-			intention = new Intention(new Desire(new Belief(null, BeliefType.FindFood), 0, 0));
+		// Default belief  
+		if (desires.Count == 0) {
+			intention = new Intention(new Desire(DesireType.FindFood, null, 0, 0));
 
 			//TODO: Add reactive agent behaviour in this situation? 
 		}
 	}
 
-	private void EvalBeliefs()
-	{
-		float danger = 0f;
-		float confidence = 0f;
-	
-		foreach (Belief belief in beliefs) {
-
-			if(enemies != null && friends != null) {
-				danger = enemies.Count * enemyImpact;
-				confidence = friends.Count * friendsImpact;
-			}
-			desires.Add(new Desire(belief, danger, confidence));
-		}
-	}
-	
 	private void EvalDesires()
 	{
 		Desire bestDesire = null;
@@ -112,32 +111,34 @@ public class ScavengerAntBDI : ScavengerAnt
 		//Get best desire
 		foreach (Desire desire in desires) {
 
-			if (desire.DesireValue > desireValue) {
+			if (desire.DesireValue >= desireValue) {
 				bestDesire = desire;
 				desireValue = desire.DesireValue;
 			}
 		}
 
 		if (bestDesire != null) {
+
 			futureIntention = new Intention(bestDesire);
-		}
 		
-		if (futureIntention != null && (futureIntention.IntentionValue >= intention.IntentionValue)) {
+			if (futureIntention.IntentionValue >= intention.IntentionValue) {
 
-			//Update current intention
-			intention = futureIntention;
+				//Update current intention
+				intention = futureIntention;
 
-			switch (intention.Type) {
-			case BeliefType.CatchFood:
-				RotateTowards(intention.IntentionObject);
-				proceed = true;
-				break;
-			case BeliefType.DropFood:
-				proceed = true;
-				break;
-			case BeliefType.Run:
-				run = true;
-				break;
+				switch (intention.Type) {
+				case DesireType.CatchFood:
+					RotateTowards(intention.IntentionObject);
+					proceed = true;
+					break;
+				case DesireType.DropFood:
+					proceed = true;
+					break;
+				case DesireType.Run:
+					transform.Rotate(0.0f, 180.0f, 0.0f); //Inverse direction and run
+					run = true;
+					break;
+				}
 			}
 		}
 	}

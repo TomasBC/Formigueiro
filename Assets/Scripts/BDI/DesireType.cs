@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum BeliefType
+public enum DesireType
 {
 	Attack,
 	CatchFood,

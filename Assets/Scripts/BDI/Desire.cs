@@ -3,25 +3,32 @@ using System.Collections;
 
 public class Desire 
 {
-	private Belief belief;
+	private DesireType desireType;
+	private GameObject desireObject;
 
 	private float danger;
 	private float confidence;
 	private float desireValue;
 
 	// Constructor
-	public Desire(Belief belief, float danger, float confidence)
+	public Desire(DesireType desireType, GameObject desireObject, float danger, float confidence)
 	{
-		this.belief = belief;
+		this.desireType = desireType;
+		this.desireObject = desireObject;
 		this.danger = danger;
 		this.confidence = confidence;
 		this.desireValue = confidence - danger;
 	}
 
 	// Getters
-	public Belief Belief 
+	public DesireType DesireType 
 	{
-		get { return belief; }
+		get { return desireType; }
+	}
+
+	public GameObject DesireObject 
+	{
+		get { return desireObject; }
 	}
 
 	public float Danger 

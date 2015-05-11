@@ -4,7 +4,7 @@ using System.Collections;
 public class Intention 
 {
 	private Desire desire;
-	private BeliefType type;
+	private DesireType type;
 
 	private float intentionValue;
 	private GameObject intentionObject;
@@ -13,10 +13,10 @@ public class Intention
 	public Intention(Desire desire)
 	{
 		this.desire = desire;
-		this.type = desire.Belief.Type;
+		this.type = desire.DesireType;
 
 		this.intentionValue = desire.DesireValue;
-		this.intentionObject = desire.Belief.BeliefObject;
+		this.intentionObject = desire.DesireObject;
 	}
 
 	// Getters
@@ -25,7 +25,7 @@ public class Intention
 		get { return desire; }
 	}
 
-	public BeliefType Type 
+	public DesireType Type 
 	{
 		get { return type; }
 	}
