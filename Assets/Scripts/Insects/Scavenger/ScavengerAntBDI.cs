@@ -10,13 +10,13 @@ public class ScavengerAntBDI : ScavengerAnt
 	public int friendsImpact = 5;
 
 	private bool nav = false;
-	private Vector3 eulerAngleVelocity = Vector3.zero;
+	private Vector3 eulerAngleVelocity;
 
-	private NavMeshAgent navAgent = null;
+	private NavMeshAgent navAgent;
 
 	// Beliefs	
-	public Transform unloadZone = null;
-	public Transform labyrinthDoor = null;
+	public Transform unloadZone;
+	public Transform labyrinthDoor;
 
 	private List<GameObject> foood;
 	private List<GameObject> friends;
@@ -30,8 +30,10 @@ public class ScavengerAntBDI : ScavengerAnt
 	protected override void Start() 
 	{
 		base.Start();
-		navAgent = GetComponent<NavMeshAgent>();
+
 		desires = new List<Desire>();
+		eulerAngleVelocity = Vector3.zero;
+		navAgent = GetComponent<NavMeshAgent>();
 	}
 
 	// Called every fixed framerate frame
@@ -59,7 +61,7 @@ public class ScavengerAntBDI : ScavengerAnt
 				collided = false;
 			}
 		} else {
-			SmoothNavigationRot();
+			Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);
 		}
 	}
 
@@ -177,19 +179,5 @@ public class ScavengerAntBDI : ScavengerAnt
 				}
 			}
 		}
-	}
-
-	private void SmoothNavigationRot() {
-
-		float angle = Vector3.Angle(navAgent.velocity.normalized, transform.forward);
-
-		if (navAgent.velocity.normalized.x < this.transform.forward.x) 
-		{
-			angle *= -1;
-		}
-
-		eulerAngleVelocity.Set(0f, -angle, 0f);
-		Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
-		rigidBody.MoveRotation(rigidBody.rotation * deltaRotation);
 	}
 }

@@ -43,7 +43,7 @@ public class SoldierAnt : Insect
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Enemy").ToArray();
 		Dictionary<string, List<GameObject>> result;
 		
-		result = ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
+		result = Utils.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
 		
 		return result;
 	}

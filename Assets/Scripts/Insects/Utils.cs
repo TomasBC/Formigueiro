@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ViewConeController : MonoBehaviour 
+public class Utils : MonoBehaviour 
 {
+	// View cone related methods
 	public static bool CheckIfInsideCone(GameObject obj, GameObject objToCompareTo, float fieldOfView, float longViewDistance, float closeViewDistance) 
 	{
 		RaycastHit hit; //Out hit
@@ -39,7 +40,7 @@ public class ViewConeController : MonoBehaviour
 
 		for(int i = 0; i < objs.Length; i++) {
 			
-			if(ViewConeController.CheckIfInsideCone(obj, objs[i], fieldOfView, longViewDistance, closeViewDistance)) {
+			if(Utils.CheckIfInsideCone(obj, objs[i], fieldOfView, longViewDistance, closeViewDistance)) {
 
 				if(result.TryGetValue(objs[i].tag, out auxList)) { //If keyTag exists we add the object to the corresponding list
 					auxList.Add(objs[i]);
@@ -52,5 +53,21 @@ public class ViewConeController : MonoBehaviour
 			}
 		}
 		return result;
+	}
+
+
+	// Method that provides smooth navigation for a certain navAgent
+	public static void SmoothNavigationRot(NavMeshAgent navAgent, Rigidbody rb, Vector3 eulerAngleVelocity) 
+	{	
+		float angle = Vector3.Angle(navAgent.velocity.normalized, rb.transform.forward);
+		
+		if (navAgent.velocity.normalized.x < rb.transform.forward.x) 
+		{
+			angle *= -1;
+		}
+		
+		eulerAngleVelocity.Set(0f, -angle, 0f);
+		Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
+		rb.MoveRotation(rb.rotation * deltaRotation);
 	}
 }

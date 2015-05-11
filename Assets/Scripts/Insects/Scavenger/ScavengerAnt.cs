@@ -97,6 +97,6 @@ public class ScavengerAnt : Insect
 		//Get active food
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").ToArray();
 
-		return ViewConeController.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
+		return Utils.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
 	}
 }
