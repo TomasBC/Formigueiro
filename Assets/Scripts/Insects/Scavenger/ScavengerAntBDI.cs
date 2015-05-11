@@ -9,6 +9,8 @@ public class ScavengerAntBDI : ScavengerAnt
 	public int enemyImpact = 10;
 	public int friendsImpact = 5;
 
+	public GameObject unloadZone;
+
 	private List<GameObject> foood;
 	private List<GameObject> friends;
 	private List<GameObject> enemies;
@@ -21,6 +23,7 @@ public class ScavengerAntBDI : ScavengerAnt
 	{
 		base.Start();
 		desires = new List<Desire>();
+		unloadZone = GameObject.Find ("queen_wall");
 	}
 
 	// Called every fixed framerate frame
@@ -134,6 +137,7 @@ public class ScavengerAntBDI : ScavengerAnt
 					proceed = true;
 					break;
 				case DesireType.DropFood:
+					GetComponent<NavMeshAgent>().destination = unloadZone.transform.position;
 					break;
 				case DesireType.Run:
 					transform.Rotate(0.0f, 180.0f, 0.0f); //Inverse direction and run
