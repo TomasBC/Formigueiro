@@ -159,7 +159,6 @@ public class ScavengerAntBDI : ScavengerAnt
 					Transform intentionDest = intention.IntentionDest;
 
 					if(intentionDest != null) {
-						speed = 1;
 						nav = true;
 						navAgent.destination = intentionDest.position;
 					}
