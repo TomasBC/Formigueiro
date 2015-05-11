@@ -77,7 +77,7 @@ public class EnemyReactive : Insect {
 		//If we find any ant, we rotate towards it
 		if (objsInsideCone.TryGetValue("Ant", out listAux)) {
 
-			RotateTowards(listAux[Random.Range(0, listAux.Count)]); //Randomly pick a ant
+			RotateTowards(listAux[Random.Range(0, listAux.Count)].transform); //Randomly pick a ant
 			proceed = true;
 		}
 	}

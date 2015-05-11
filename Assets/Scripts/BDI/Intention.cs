@@ -7,7 +7,7 @@ public class Intention
 	private DesireType type;
 
 	private float intentionValue;
-	private GameObject intentionObject;
+	private Transform intentionDest;
 
 	// Constructor
 	public Intention(Desire desire)
@@ -16,7 +16,7 @@ public class Intention
 		this.type = desire.DesireType;
 
 		this.intentionValue = desire.DesireValue;
-		this.intentionObject = desire.DesireObject;
+		this.intentionDest = desire.DesireDest;
 	}
 
 	// Getters
@@ -35,8 +35,8 @@ public class Intention
 		get { return intentionValue; }
 	}
 
-	public GameObject IntentionObject
+	public Transform IntentionDest
 	{
-		get{ return intentionObject; }
+		get{ return intentionDest; }
 	}
 }

@@ -9,12 +9,20 @@ public class ScavengerAntBDI : ScavengerAnt
 	public int enemyImpact = 10;
 	public int friendsImpact = 5;
 
-	public GameObject unloadZone;
+	private bool nav = false;
+	private Vector3 eulerAngleVelocity = Vector3.zero;
+
+	private NavMeshAgent navAgent = null;
+
+	// Beliefs	
+	public Transform unloadZone = null;
+	public Transform labyrinthDoor = null;
 
 	private List<GameObject> foood;
 	private List<GameObject> friends;
 	private List<GameObject> enemies;
-
+	
+	// Intentions and desires
 	private Intention intention;
 	private List<Desire> desires;
 
@@ -22,8 +30,8 @@ public class ScavengerAntBDI : ScavengerAnt
 	protected override void Start() 
 	{
 		base.Start();
+		navAgent = GetComponent<NavMeshAgent>();
 		desires = new List<Desire>();
-		unloadZone = GameObject.Find ("queen_wall");
 	}
 
 	// Called every fixed framerate frame
@@ -38,15 +46,20 @@ public class ScavengerAntBDI : ScavengerAnt
 	// Reactors
 	protected override void Move() 
 	{
-		if (!collided && !proceed) {
-			base.Move(); //Move forward and rotate max
-			Rotate(randomMax);
-		} else if (!collided && proceed) {
-			base.Move(); //Move forward
-			proceed = false;
+		if (!nav) {
+
+			if (!collided && !proceed) {
+				base.Move (); //Move forward and rotate max
+				Rotate (randomMax);
+			} else if (!collided && proceed) {
+				base.Move (); //Move forward
+				proceed = false;
+			} else {
+				Rotate (randomMin); //Rotate min
+				collided = false;
+			}
 		} else {
-			Rotate(randomMin); //Rotate min
-			collided = false;
+			SmoothNavigationRot();
 		}
 	}
 
@@ -77,7 +90,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		// If we are carrying food
 		if (CarryingFood()) {
-			desires.Add(new Desire(DesireType.DropFood, null, 0, 0));
+			desires.Add(new Desire(DesireType.DropFood, null, danger, confidence));
 		}
 
 		// If we see some food and we are not carrying any
@@ -86,7 +99,7 @@ public class ScavengerAntBDI : ScavengerAnt
 			foreach (GameObject obj in foood) {
 				//If food is not being transported
 				if (!obj.GetComponent<Food>().Transport) {
-					desires.Add(new Desire(DesireType.CatchFood, obj, danger, confidence)); //Add catch food belief
+					desires.Add(new Desire(DesireType.CatchFood, obj.transform, danger, confidence)); //Add catch food belief
 				}
 			}
 		}
@@ -94,22 +107,25 @@ public class ScavengerAntBDI : ScavengerAnt
 		if (enemies != null) { //Nearby enemies
 
 			foreach (GameObject obj in enemies) {
-				desires.Add(new Desire(DesireType.Run, obj, danger, confidence)); //Add run belief
+				desires.Add(new Desire(DesireType.Run, obj.transform, danger, confidence)); //Add run belief
 			}
 		}
 
-		// Default belief  
+		// Default belief (FindFood)  
 		if (desires.Count == 0) {
-			intention = new Intention(new Desire(DesireType.FindFood, null, 0, 0));
 
-			//TODO: Add reactive agent behaviour in this situation? 
+			if(insideLabyrinth) {
+				desires.Add(new Desire(DesireType.FindFood, labyrinthDoor, danger, confidence));
+			}
+			else {
+				desires.Add(new Desire(DesireType.FindFood, null, danger, confidence));
+				//TODO: Add reactive agent behaviour in this situation? 
+			}
 		}
 	}
 
 	private void EvalDesires()
 	{
-		Debug.Log (intention.Type);
-
 		Desire bestDesire = null;
 		Intention futureIntention = null;
 
@@ -126,18 +142,34 @@ public class ScavengerAntBDI : ScavengerAnt
 
 			futureIntention = new Intention(bestDesire);
 		
+			if(intention == null) {
+				intention = futureIntention;
+			}
+
+			Debug.Log(intention.Type);
+
 			if (futureIntention.IntentionValue >= intention.IntentionValue) {
 
 				//Update current intention
 				intention = futureIntention;
 
 				switch (intention.Type) {
+				case DesireType.FindFood:
+
+					Transform intentionDest = intention.IntentionDest;
+
+					if(intentionDest != null) {
+						speed = 1;
+						nav = true;
+						navAgent.destination = intentionDest.position;
+					}
+					break;
 				case DesireType.CatchFood:
-					RotateTowards(intention.IntentionObject);
+					RotateTowards(intention.IntentionDest);
 					proceed = true;
 					break;
 				case DesireType.DropFood:
-					GetComponent<NavMeshAgent>().destination = unloadZone.transform.position;
+					navAgent.destination = unloadZone.transform.position;
 					break;
 				case DesireType.Run:
 					transform.Rotate(0.0f, 180.0f, 0.0f); //Inverse direction and run
@@ -146,5 +178,19 @@ public class ScavengerAntBDI : ScavengerAnt
 				}
 			}
 		}
+	}
+
+	private void SmoothNavigationRot() {
+
+		float angle = Vector3.Angle(navAgent.velocity.normalized, transform.forward);
+
+		if (navAgent.velocity.normalized.x < this.transform.forward.x) 
+		{
+			angle *= -1;
+		}
+
+		eulerAngleVelocity.Set(0f, -angle, 0f);
+		Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
+		rigidBody.MoveRotation(rigidBody.rotation * deltaRotation);
 	}
 }

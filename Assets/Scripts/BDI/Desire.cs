@@ -4,17 +4,17 @@ using System.Collections;
 public class Desire 
 {
 	private DesireType desireType;
-	private GameObject desireObject;
+	private Transform desireDest;
 
 	private float danger;
 	private float confidence;
 	private float desireValue;
 
 	// Constructor
-	public Desire(DesireType desireType, GameObject desireObject, float danger, float confidence)
+	public Desire(DesireType desireType, Transform desireDest, float danger, float confidence)
 	{
 		this.desireType = desireType;
-		this.desireObject = desireObject;
+		this.desireDest = desireDest;
 		this.danger = danger;
 		this.confidence = confidence;
 		this.desireValue = confidence - danger;
@@ -26,9 +26,9 @@ public class Desire
 		get { return desireType; }
 	}
 
-	public GameObject DesireObject 
+	public Transform DesireDest 
 	{
-		get { return desireObject; }
+		get { return desireDest; }
 	}
 
 	public float Danger 

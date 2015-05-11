@@ -10,6 +10,7 @@ TagManager:
   - Queen
   - Wall
   - Unload
+  - Labyrinth
   layers:
   - Default
   - TransparentFX

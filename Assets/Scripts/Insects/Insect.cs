@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Insect : MonoBehaviour 
 {
+	protected bool insideLabyrinth = true;
+	protected Collider labyrinth = null;
+
 	// Public variables
 	public int speed = 20;
 	
@@ -24,16 +27,18 @@ public class Insect : MonoBehaviour
 	protected virtual void Start() 
 	{
 		rigidBody = GetComponent<Rigidbody>();
+		labyrinth = GameObject.FindWithTag("Labyrinth").GetComponent<Collider>();
 	}
 
 	// Called every fixed framerate frame
 	protected virtual void FixedUpdate() 
 	{
 		UpdateEnergy(frameEnergyLoss);
+		InsideLabyrinth();
 		Death();
 	}
 
-
+	// Sensors
 	protected virtual void OnTriggerEnter(Collider collider) 
 	{
 		//Trigger Wall?
@@ -48,6 +53,16 @@ public class Insect : MonoBehaviour
 		if (collision.gameObject.tag.Equals(this.gameObject.tag) ||
 		    collision.gameObject.tag.Equals("Wall")) {
 			collided = true;
+		}
+	}
+
+	protected void InsideLabyrinth() {
+
+		//InsideLabyrinth?
+		if(labyrinth.bounds.Contains(transform.position)) {
+			insideLabyrinth = true;
+		} else {
+			insideLabyrinth = false;
 		}
 	}
 	
@@ -76,9 +91,9 @@ public class Insect : MonoBehaviour
 		}
 	}
 
-	protected void RotateTowards(GameObject targetObj) 
+	protected void RotateTowards(Transform targetPos) 
 	{
-		Vector3 targetPosition = targetObj.transform.position;
+		Vector3 targetPosition = transform.position;
 		targetPosition.y = 0.0f;
 
 		//Rotate towards the target

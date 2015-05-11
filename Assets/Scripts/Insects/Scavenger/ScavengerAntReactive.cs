@@ -44,7 +44,7 @@ public class ScavengerAntReactive : ScavengerAnt
 			for (int i = 0; i < listAux.Count; i++) {
 
 				if (!listAux[i].GetComponent<Food>().Transport) { //If food is not being transported
-					RotateTowards(listAux[i]); //Pick the first available food object
+					RotateTowards(listAux[i].transform); //Pick the first available food object
 					proceed = true;
 					break;
 				}
