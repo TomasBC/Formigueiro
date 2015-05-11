@@ -52,7 +52,7 @@ public class ScavengerAntBDI : ScavengerAnt
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
 
-		// Clear beliefs and desires
+		// Clear desires
 		desires.Clear();
 
 		// Gather information about beliefs: Food, Ants (Friends) and Enemies

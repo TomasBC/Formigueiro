@@ -20,7 +20,6 @@ public class Insect : MonoBehaviour
 	// Protected variables
 	protected Rigidbody rigidBody;
 
-
 	// Initialization
 	protected virtual void Start() 
 	{

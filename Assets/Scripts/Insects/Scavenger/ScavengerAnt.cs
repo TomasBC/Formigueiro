@@ -39,25 +39,26 @@ public class ScavengerAnt : Insect
 		
 	protected override void OnCollisionEnter(Collision collision) 
 	{
-		base.OnCollisionEnter(collision);
-
 		//CarryFood?
 		if (collision.gameObject.tag.Equals("Food") && !CarryingFood()) {
 			Load(collision);
+			collided = true;
 		}
 
 		//QueenWall?
-		if (collision.gameObject.tag.Equals("Unload") && CarryingFood()) {
+		if (collision.gameObject.name.Equals("queen_wall") && CarryingFood()) {
 			Unload();
 			collided = true;
 		}
+
+		base.OnCollisionEnter(collision);
 	}
 	
 	// Reactors
 	protected override void Move() 
 	{
 		base.Move(); //Move forward
-
+	
 		//If carrying food move it as well
 		if (CarryingFood()) {
 			foodRigidBody.transform.position = rigidBody.transform.position + new Vector3(0.0f, 1.5f, 0.0f);
@@ -85,7 +86,7 @@ public class ScavengerAnt : Insect
 		foodRigidBody.useGravity = true;
 		foodRigidBody.freezeRotation = false;
 
-		foodRigidBody.AddForce(rigidBody.transform.forward * 150.0f);
+		foodRigidBody.AddForce(transform.forward * 150.0f);
 		food.GetComponent<Food>().Transport = false;
 
 		food = null;
@@ -97,6 +98,6 @@ public class ScavengerAnt : Insect
 		//Get active food
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").ToArray();
 
-		return ViewConeController.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
+		return ViewConeController.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
 	}
 }
