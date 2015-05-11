@@ -42,7 +42,6 @@ public class ScavengerAnt : Insect
 		//CarryFood?
 		if (collision.gameObject.tag.Equals("Food") && !CarryingFood()) {
 			Load(collision);
-			collided = true;
 		}
 
 		//QueenWall?

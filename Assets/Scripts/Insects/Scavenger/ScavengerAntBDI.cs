@@ -38,7 +38,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		if (!collided && !proceed) {
 			base.Move(); //Move forward and rotate max
 			Rotate(randomMax);
-		} else if (!collided && (proceed || run)) {
+		} else if (!collided && proceed) {
 			base.Move(); //Move forward
 			proceed = false;
 		} else {
@@ -105,6 +105,8 @@ public class ScavengerAntBDI : ScavengerAnt
 
 	private void EvalDesires()
 	{
+		Debug.Log (intention.Type);
+
 		Desire bestDesire = null;
 		Intention futureIntention = null;
 
@@ -132,7 +134,6 @@ public class ScavengerAntBDI : ScavengerAnt
 					proceed = true;
 					break;
 				case DesireType.DropFood:
-					proceed = true;
 					break;
 				case DesireType.Run:
 					transform.Rotate(0.0f, 180.0f, 0.0f); //Inverse direction and run
