@@ -6,13 +6,14 @@ public class ScavengerAntBDI : ScavengerAnt
 {
 	public float desireValue = -1000f;
 
-	public int enemyImpact = 10;
-	public int friendsImpact = 5;
-
+	// Navigation agent
+	private NavMeshAgent navAgent;
 	private bool navigation = false;
 	private Vector3 eulerAngleVelocity;
 
-	private NavMeshAgent navAgent;
+	// Beliefs impact
+	public int enemyImpact = 10;
+	public int friendsImpact = 5;
 
 	// Beliefs	
 	public Transform unloadZone;
@@ -25,6 +26,7 @@ public class ScavengerAntBDI : ScavengerAnt
 	// Intentions and desires
 	private Intention intention;
 	private List<Desire> desires;
+
 
 	// Initialization
 	protected override void Start() 
@@ -44,7 +46,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		EvalDesires();
 		Move();
 	}
-
+	
 	// Reactors
 	protected override void Move() 
 	{
@@ -55,13 +57,16 @@ public class ScavengerAntBDI : ScavengerAnt
 		 * spawned inside the labyrinth and needs to find its way out.
 		 * 
 		 * 2º situation - occurs when the agent carries some piece of
-		 * food and needs to get back to the labyrinth to unload it.
+		 * food and needs to get back to the labyrinth entrance and
+		 * unload it.
 		 * 
 		 */
 		if (navigation) {
 
-			Transform intentionDest = intention.IntentionDest;
-			navAgent.destination = intentionDest.position;
+			// Re-enable navmeshAgent
+			navAgent.enabled = true;
+
+			navAgent.destination = intention.IntentionDest.transform.position; //Apply destination to navAgent
 			Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);
 		}
 
@@ -104,9 +109,10 @@ public class ScavengerAntBDI : ScavengerAnt
 		 * navigates across the map using a randomMax value for rotation.
 		 * 
 		 */ 
-		else {				
-			base.Move();
+		else {			
 			Rotate(randomMax);
+			base.Move();
+
 		}
 	}
 
@@ -116,7 +122,8 @@ public class ScavengerAntBDI : ScavengerAnt
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
 
 		// Clear desires
-		desires.Clear();
+		if(desires != null) 
+			desires.Clear();
 
 		// Gather information about beliefs: Food, Ants (Friends) and Enemies
 		objsInsideCone.TryGetValue("Food", out foood);
@@ -137,7 +144,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		// If we are carrying food
 		if (CarryingFood()) {
-			desires.Add(new Desire(DesireType.DropFood, null, danger, confidence));
+			desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence));
 		}
 
 		// If we see some food and we are not carrying any
@@ -189,20 +196,27 @@ public class ScavengerAntBDI : ScavengerAnt
 
 			futureIntention = new Intention(bestDesire);
 		
-			if(intention == null) {
-				intention = futureIntention;
-			}
-
-			Debug.Log(intention.Type);
-
-			if (futureIntention.IntentionValue >= intention.IntentionValue) {
+			if (intention == null || futureIntention.IntentionValue >= intention.IntentionValue) {
 
 				//Update current intention
 				intention = futureIntention;
 
 				switch (intention.Type) {
 				case DesireType.FindFood:
-					if(intention.IntentionDest != null) { navigation = true; } //Check if destination exists
+
+					if(intention.IntentionDest != null) { 
+						navigation = true; 
+
+					} else {
+
+						//Deactivate navMeshAgent
+						if(navAgent.enabled) {
+							navAgent.ResetPath();
+							navAgent.enabled = false;
+						}
+
+						navigation = false;
+					}
 					break;
 				case DesireType.CatchFood:
 					proceed = true;

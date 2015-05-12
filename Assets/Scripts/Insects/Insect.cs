@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class Insect : MonoBehaviour 
 {
 	protected bool insideLabyrinth = true;
-	protected Collider labyrinth = null;
 
 	// Public variables
 	public int speed = 20;
@@ -14,8 +13,8 @@ public class Insect : MonoBehaviour
 	public float maxEnergy = 100.0f;
 	public float frameEnergyLoss = -0.001f;
 
-	public int randomMin = 3;
-	public int randomMax = 250;
+	public int randomMin = 4;
+	public int randomMax = 100;
 
 	protected bool collided = false;
 	protected bool proceed = false;
@@ -27,42 +26,35 @@ public class Insect : MonoBehaviour
 	protected virtual void Start() 
 	{
 		rigidBody = GetComponent<Rigidbody>();
-		labyrinth = GameObject.FindWithTag("Labyrinth").GetComponent<Collider>();
 	}
 
 	// Called every fixed framerate frame
 	protected virtual void FixedUpdate() 
 	{
 		UpdateEnergy(frameEnergyLoss);
-		InsideLabyrinth();
 		Death();
 	}
 
 	// Sensors
 	protected virtual void OnTriggerEnter(Collider collider) 
 	{
-		//Trigger Wall?
-		if (collider.gameObject.tag.Equals("Wall")) {
-			collided = true;
+		//LabyrinthDoor?
+		if (collider.gameObject.tag.Equals("Labyrinth")) {
+		    insideLabyrinth = !insideLabyrinth;
+
+			Debug.Log(insideLabyrinth);
+
+			//Reset rotation
+			transform.rotation = Quaternion.identity;
 		}
 	}
-
+	
 	protected virtual void OnCollisionEnter(Collision collision) 
 	{
 		//SameInsect? or Wall?
 		if (collision.gameObject.tag.Equals(this.gameObject.tag) ||
 		    collision.gameObject.tag.Equals("Wall")) {
 			collided = true;
-		}
-	}
-
-	protected void InsideLabyrinth() {
-
-		//InsideLabyrinth?
-		if(labyrinth.bounds.Contains(transform.position)) {
-			insideLabyrinth = true;
-		} else {
-			insideLabyrinth = false;
 		}
 	}
 	
