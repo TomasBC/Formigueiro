@@ -15,8 +15,8 @@ public class ScavengerAntBDI : ScavengerAnt
 	public float runDistance = 10f;
 
 	// Beliefs	
-	private Transform unloadZone = null;
-	private Transform labyrinthDoor = null;
+	public Transform unloadZone;
+	public Transform labyrinthDoor;
 
 	private List<GameObject> foood;
 	private List<GameObject> friends;
@@ -35,7 +35,9 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		desires = new List<Desire>();
 		eulerAngleVelocity = Vector3.zero;
+
 		navAgent = GetComponent<NavMeshAgent>();
+		navAgent.enabled = false;
 	}
 
 	// Called every fixed framerate frame
@@ -66,20 +68,33 @@ public class ScavengerAntBDI : ScavengerAnt
 			if (!navAgent.enabled) {
 				navAgent.enabled = true;
 				navAgent.ResetPath();
+
+				navAgent.destination = intention.IntentionDest.transform.position;
+				Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);	
 			}
-		
-			navAgent.destination = intention.IntentionDest.transform.position;
-			Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);
 
-			// Check if we reach our destination
-			if (navAgent.destination.x == transform.position.x && navAgent.destination.z == transform.position.z) {
+			// Check if we reached our destination
+			if (!navAgent.pathPending)
+			{
+				if (navAgent.remainingDistance <= navAgent.stoppingDistance)
+				{
+					if (!navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f)
+					{
+						intention = null;
+						navigation = false;
+						
+						// Disable navmeshAgent
+						navAgent.ResetPath();
+						navAgent.enabled = false;
 
-				intention = null;
-				navigation = false;
+						// Reset rotation
+						transform.rotation = Quaternion.identity;
+					}
+				}
+			}
 
-				// Re-enable navmeshAgent
-				navAgent.ResetPath();
-				navAgent.enabled = false;
+			if(CarryingFood()) {
+				food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 			}
 		}
 
@@ -92,32 +107,40 @@ public class ScavengerAntBDI : ScavengerAnt
 		 *	to proceed with its actions.
 		 * 
 		 */
-		else {
-			if (collided && !proceed) {
+		else if (collided && !proceed) {
 
-				Rotate (randomMin);
-				base.Move ();
+				Rotate(randomMin);
+				base.Move();
 
 				collided = false;
-			}
-
-			/*
-			 * Generic move situation:
-			 * 
-			 * This happens when the agent (scavenger ant), doesn't really
-			 * know its purpose i.e, no beliefs exist. The agent randomly
-			 * navigates across the map using a randomMax value for rotation.
-			 * 
-			 */ 
-			else {			
-					Rotate (randomMax);
-					base.Move ();
-				}
 		}
 
-		if (run && Vector3.Distance(transform.position, intention.IntentionDest.position) > 10) {
-			run = false;
-			intention = null;
+	   /*
+		* Generic move situation:
+		* 
+		* This happens when the agent (scavenger ant), doesn't really
+		* know its purpose i.e, no beliefs exist. The agent randomly
+		* navigates across the map using a randomMax value for rotation.
+		* 
+		*/ 
+		else {			
+			Rotate (randomMax);
+			base.Move();
+		}
+
+		if (run) {
+		
+			if(navAgent.enabled) {
+				navigation = false;
+
+				navAgent.ResetPath();
+				navAgent.enabled = false;
+			}
+
+			if(Vector3.Distance(transform.position, intention.IntentionDest.position) > 10) {
+				run = false;
+				intention = null;
+			}
 		}
 	}
 
@@ -127,8 +150,9 @@ public class ScavengerAntBDI : ScavengerAnt
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
 
 		// Clear desires
-		if(desires != null) 
-			desires.Clear();
+		if (desires != null) {
+			desires.Clear ();
+		}
 	
 		// Gather information about beliefs: Food, Ants (Friends) and Enemies
 		objsInsideCone.TryGetValue("Food", out foood);
@@ -144,11 +168,9 @@ public class ScavengerAntBDI : ScavengerAnt
 
 			foreach (GameObject extra in extras) {
 				if (extra.name.Contains("labyrinth_door")) {
-					Debug.Log ("Added lab door");
 					labyrinthDoor = extra.transform;
 				}
 				else {
-					Debug.Log ("Unload Zone");
 					unloadZone = extra.transform;
 				}
 			}
@@ -221,7 +243,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 				//Update current intention
 				intention = futureIntention;
-				Debug.Log("Alterei de " + intention.Type + " para " + futureIntention.Type);
+
 				switch (intention.Type) {
 				case DesireType.FindFood:
 					//Just do stuff
@@ -250,7 +272,6 @@ public class ScavengerAntBDI : ScavengerAnt
 				}
 			}
 		}
-
 		Debug.Log (intention.Type);
 	}
 }

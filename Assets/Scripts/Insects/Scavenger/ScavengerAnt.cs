@@ -54,16 +54,6 @@ public class ScavengerAnt : Insect
 	}
 	
 	// Reactors
-	protected override void Move() 
-	{
-		base.Move(); //Move forward
-	
-		//If carrying food move it as well
-		if (CarryingFood()) {
-			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
-		}
-	}
-
 	protected virtual void Load(Collision collision) 
 	{
 		food = collision.gameObject;
@@ -87,7 +77,7 @@ public class ScavengerAnt : Insect
 		foodRigidBody.useGravity = true;
 		foodRigidBody.freezeRotation = false;
 
-		foodRigidBody.AddForce(transform.forward * 150.0f);
+		foodRigidBody.AddForce(transform.forward * 400.0f);
 		food.GetComponent<Food>().Transport = false;
 
 		food = null;
