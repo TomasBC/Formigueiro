@@ -8,5 +8,6 @@ public enum DesireType
 	DropFood,
 	Run,
 	Follow,
+	Exit,
 	FindFood
 }

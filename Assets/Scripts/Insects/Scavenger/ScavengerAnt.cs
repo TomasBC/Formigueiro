@@ -60,7 +60,7 @@ public class ScavengerAnt : Insect
 	
 		//If carrying food move it as well
 		if (CarryingFood()) {
-			foodRigidBody.transform.position = rigidBody.transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 		}
 	}
 
@@ -74,6 +74,8 @@ public class ScavengerAnt : Insect
 
 		foodRigidBody.useGravity = false;
 		foodRigidBody.freezeRotation = true;
+
+		food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 
 		//Reset rotation
 		transform.rotation = Quaternion.identity;
@@ -95,7 +97,10 @@ public class ScavengerAnt : Insect
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
 		//Get active food
-		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").ToArray();
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("Food").Concat
+						   (GameObject.FindGameObjectsWithTag("Ant")).Concat
+						   (GameObject.FindGameObjectsWithTag("Enemy")).Concat
+				 		   (GameObject.FindGameObjectsWithTag("Labyrinth")).ToArray();
 
 		return Utils.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
 	}

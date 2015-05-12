@@ -42,10 +42,8 @@ public class Insect : MonoBehaviour
 		if (collider.gameObject.tag.Equals("Labyrinth")) {
 		    insideLabyrinth = !insideLabyrinth;
 
-			Debug.Log(insideLabyrinth);
-
+			Debug.Log("Troquei");
 			//Reset rotation
-			transform.rotation = Quaternion.identity;
 		}
 	}
 	

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class ScavengerAntBDI : ScavengerAnt 
 {
-	public float desireValue = -1000f;
-
 	// Navigation agent
 	private NavMeshAgent navAgent;
 	private bool navigation = false;
@@ -14,14 +12,16 @@ public class ScavengerAntBDI : ScavengerAnt
 	// Beliefs impact
 	public int enemyImpact = 10;
 	public int friendsImpact = 5;
+	public float runDistance = 10f;
 
 	// Beliefs	
-	public Transform unloadZone;
-	public Transform labyrinthDoor;
+	private Transform unloadZone = null;
+	private Transform labyrinthDoor = null;
 
 	private List<GameObject> foood;
 	private List<GameObject> friends;
 	private List<GameObject> enemies;
+	private List<GameObject> extras;
 	
 	// Intentions and desires
 	private Intention intention;
@@ -63,11 +63,24 @@ public class ScavengerAntBDI : ScavengerAnt
 		 */
 		if (navigation) {
 
-			// Re-enable navmeshAgent
-			navAgent.enabled = true;
-
-			navAgent.destination = intention.IntentionDest.transform.position; //Apply destination to navAgent
+			if (!navAgent.enabled) {
+				navAgent.enabled = true;
+				navAgent.ResetPath();
+			}
+		
+			navAgent.destination = intention.IntentionDest.transform.position;
 			Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);
+
+			// Check if we reach our destination
+			if (navAgent.destination.x == transform.position.x && navAgent.destination.z == transform.position.z) {
+
+				intention = null;
+				navigation = false;
+
+				// Re-enable navmeshAgent
+				navAgent.ResetPath();
+				navAgent.enabled = false;
+			}
 		}
 
 		/*
@@ -79,40 +92,32 @@ public class ScavengerAntBDI : ScavengerAnt
 		 *	to proceed with its actions.
 		 * 
 		 */
-		else if (collided && !proceed) {
+		else {
+			if (collided && !proceed) {
 
-			Rotate(randomMin);
-			collided = false;
+				Rotate (randomMin);
+				base.Move ();
+
+				collided = false;
+			}
+
+			/*
+			 * Generic move situation:
+			 * 
+			 * This happens when the agent (scavenger ant), doesn't really
+			 * know its purpose i.e, no beliefs exist. The agent randomly
+			 * navigates across the map using a randomMax value for rotation.
+			 * 
+			 */ 
+			else {			
+					Rotate (randomMax);
+					base.Move ();
+				}
 		}
 
-		/*
-		 * Proceed situation:
-		 * 
-		 * This situation occurs when the agent has an intention i.e
-		 * grabbing food, run...and provides the correct orientation
-		 * for the task fulfilment, rotating the agent and moving it.
-		 * This relies on the view cone evaluation.
-		 * 
-		 */
-		else if (!collided && proceed) {
-
-			RotateTowards(intention.IntentionDest);
-			base.Move(); //Move forward
-			proceed = false;
-		} 
-
-		/*
-		 * Generic move situation:
-		 * 
-		 * This happens when the agent (scavenger ant), doesn't really
-		 * know its purpose i.e, no beliefs exist. The agent randomly
-		 * navigates across the map using a randomMax value for rotation.
-		 * 
-		 */ 
-		else {			
-			Rotate(randomMax);
-			base.Move();
-
+		if (run && Vector3.Distance(transform.position, intention.IntentionDest.position) > 10) {
+			run = false;
+			intention = null;
 		}
 	}
 
@@ -124,15 +129,30 @@ public class ScavengerAntBDI : ScavengerAnt
 		// Clear desires
 		if(desires != null) 
 			desires.Clear();
-
+	
 		// Gather information about beliefs: Food, Ants (Friends) and Enemies
 		objsInsideCone.TryGetValue("Food", out foood);
 		objsInsideCone.TryGetValue("Ant", out friends);
 		objsInsideCone.TryGetValue("Enemy", out enemies);
+		objsInsideCone.TryGetValue("Labyrinth", out extras);
 
 		// Calculate danger and confidence
 		float danger = 0f;
 		float confidence = 0f;
+
+		if (extras != null && (labyrinthDoor == null || unloadZone == null)) {
+
+			foreach (GameObject extra in extras) {
+				if (extra.name.Contains("labyrinth_door")) {
+					Debug.Log ("Added lab door");
+					labyrinthDoor = extra.transform;
+				}
+				else {
+					Debug.Log ("Unload Zone");
+					unloadZone = extra.transform;
+				}
+			}
+		}
 
 		if (enemies != null) {
 			danger = enemies.Count * enemyImpact;
@@ -148,7 +168,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		}
 
 		// If we see some food and we are not carrying any
-		if (foood != null && !CarryingFood()) {
+		if (foood != null) {
 
 			foreach (GameObject obj in foood) {
 				//If food is not being transported
@@ -165,28 +185,29 @@ public class ScavengerAntBDI : ScavengerAnt
 			}
 		}
 
-		// Default belief (FindFood)  
+		// Default beliefs (Exit or FindFood)  
 		if (desires.Count == 0) {
 
 			if(insideLabyrinth) {
-				desires.Add(new Desire(DesireType.FindFood, labyrinthDoor, danger, confidence));
+				desires.Add(new Desire(DesireType.Exit, labyrinthDoor, 2, 0));
 			}
 			else {
-				desires.Add(new Desire(DesireType.FindFood, null, danger, confidence));
-				//TODO: Add reactive agent behaviour in this situation? 
+				desires.Add(new Desire(DesireType.FindFood, null, 1, confidence));
 			}
 		}
 	}
 
 	private void EvalDesires()
 	{
+		float desireValue = -1000f;
+
 		Desire bestDesire = null;
 		Intention futureIntention = null;
 
 		//Get best desire
 		foreach (Desire desire in desires) {
 
-			if (desire.DesireValue >= desireValue) {
+			if (desire.DesireValue > desireValue) {
 				bestDesire = desire;
 				desireValue = desire.DesireValue;
 			}
@@ -196,40 +217,40 @@ public class ScavengerAntBDI : ScavengerAnt
 
 			futureIntention = new Intention(bestDesire);
 		
-			if (intention == null || futureIntention.IntentionValue >= intention.IntentionValue) {
+			if (intention == null || futureIntention.IntentionValue > intention.IntentionValue || (futureIntention.Type == intention.Type)) {
 
 				//Update current intention
 				intention = futureIntention;
-
+				Debug.Log("Alterei de " + intention.Type + " para " + futureIntention.Type);
 				switch (intention.Type) {
 				case DesireType.FindFood:
+					//Just do stuff
+					break;
+				case DesireType.CatchFood:
 
 					if(intention.IntentionDest != null) { 
 						navigation = true; 
-
-					} else {
-
-						//Deactivate navMeshAgent
-						if(navAgent.enabled) {
-							navAgent.ResetPath();
-							navAgent.enabled = false;
-						}
-
-						navigation = false;
-					}
-					break;
-				case DesireType.CatchFood:
-					proceed = true;
+					} 
 					break;
 				case DesireType.DropFood:
-					navAgent.destination = unloadZone.transform.position;
+
+					if(intention.IntentionDest != null) {
+						navigation = true;
+					}
+					break;
+				case DesireType.Exit:
+
+					if(intention.IntentionDest != null) {
+						navigation = true;
+					}
 					break;
 				case DesireType.Run:
-					transform.Rotate(0.0f, 180.0f, 0.0f); //Inverse direction and run
 					run = true;
 					break;
 				}
 			}
 		}
+
+		Debug.Log (intention.Type);
 	}
 }
