@@ -191,7 +191,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		}
 
 		// If we see some food and we are not carrying any
-		if (foood != null) {
+		if (foood != null && !CarryingFood()) {
 
 			foreach (GameObject obj in foood) {
 				//If food is not being transported
