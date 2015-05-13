@@ -69,4 +69,25 @@ public class Utils : MonoBehaviour
 		Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
 		rb.MoveRotation(rb.rotation * deltaRotation);
 	}
+
+	// Check if navAgent reached its destination
+	public static bool ReachedDestination(NavMeshAgent navAgent, GameObject gameObject) 
+	{
+		if (!navAgent.pathPending) {
+			if (navAgent.remainingDistance <= navAgent.stoppingDistance) {
+				if (!navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f) {
+
+					// Disable navmeshAgent
+					navAgent.ResetPath();
+					navAgent.enabled = false;
+				
+					// Reset rotation
+					gameObject.transform.rotation = Quaternion.identity;
+
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

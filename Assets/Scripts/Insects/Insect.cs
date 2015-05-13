@@ -8,7 +8,7 @@ public class Insect : MonoBehaviour
 
 	// Public variables
 	public int speed = 20;
-	
+
 	public float energy = 100.0f;
 	public float maxEnergy = 100.0f;
 	public float frameEnergyLoss = -0.001f;
@@ -40,10 +40,13 @@ public class Insect : MonoBehaviour
 	{
 		//LabyrinthDoor?
 		if (collider.gameObject.tag.Equals("Labyrinth")) {
-		    insideLabyrinth = !insideLabyrinth;
 
-			Debug.Log("Troquei");
-			//Reset rotation
+			//LabyrinthExit?
+			if(collider.gameObject.name.Equals("labyrinth_exit")) {
+				insideLabyrinth = false;
+			} else { //LabyrinthEntrance?
+				insideLabyrinth = true;
+			}
 		}
 	}
 	

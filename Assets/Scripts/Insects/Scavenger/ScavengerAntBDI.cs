@@ -19,10 +19,10 @@ public class ScavengerAntBDI : ScavengerAnt
 	public Transform labyrinthDoor;
 
 	private List<GameObject> foood;
+	private List<GameObject> extras;
 	private List<GameObject> friends;
 	private List<GameObject> enemies;
-	private List<GameObject> extras;
-	
+
 	// Intentions and desires
 	private Intention intention;
 	private List<Desire> desires;
@@ -65,7 +65,9 @@ public class ScavengerAntBDI : ScavengerAnt
 		 */
 		if (navigation) {
 
+			// Define navAgent destination
 			if (!navAgent.enabled) {
+
 				navAgent.enabled = true;
 				navAgent.ResetPath();
 
@@ -73,26 +75,14 @@ public class ScavengerAntBDI : ScavengerAnt
 				Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);	
 			}
 
-			// Check if we reached our destination
-			if (!navAgent.pathPending)
-			{
-				if (navAgent.remainingDistance <= navAgent.stoppingDistance)
-				{
-					if (!navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f)
-					{
-						intention = null;
-						navigation = false;
-						
-						// Disable navmeshAgent
-						navAgent.ResetPath();
-						navAgent.enabled = false;
+			// Check if we reached out destination
+			if(Utils.ReachedDestination(navAgent, this.gameObject)) {
 
-						// Reset rotation
-						transform.rotation = Quaternion.identity;
-					}
-				}
+				intention = null;
+				navigation = false;
 			}
-
+		
+			// Move food along with the agent
 			if(CarryingFood()) {
 				food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 			}
@@ -124,10 +114,19 @@ public class ScavengerAntBDI : ScavengerAnt
 		* 
 		*/ 
 		else {			
-			Rotate (randomMax);
+			Rotate(randomMax);
 			base.Move();
 		}
 
+		/*
+		 * Run situation:
+		 * 
+		 * This situation occurs when the agent spots an enemy. The agent
+		 * starts running for his life and drops the food if transporting
+		 * any. It runs for a certain distance and eventually leaves the 
+		 * run state.
+		 * 
+		 */
 		if (run) {
 		
 			if(navAgent.enabled) {
@@ -160,13 +159,11 @@ public class ScavengerAntBDI : ScavengerAnt
 		objsInsideCone.TryGetValue("Enemy", out enemies);
 		objsInsideCone.TryGetValue("Labyrinth", out extras);
 
-		// Calculate danger and confidence
-		float danger = 0f;
-		float confidence = 0f;
-
+		// Gather information about labyrinthEntrance and UnloadZone
 		if (extras != null && (labyrinthDoor == null || unloadZone == null)) {
 
 			foreach (GameObject extra in extras) {
+
 				if (extra.name.Contains("labyrinth_door")) {
 					labyrinthDoor = extra.transform;
 				}
@@ -175,6 +172,10 @@ public class ScavengerAntBDI : ScavengerAnt
 				}
 			}
 		}
+
+		// Calculate danger and confidence
+		float danger = 0f;
+		float confidence = 0f;
 
 		if (enemies != null) {
 			danger = enemies.Count * enemyImpact;
@@ -186,7 +187,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		// If we are carrying food
 		if (CarryingFood()) {
-			desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence));
+			desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence + DesirePriorities.DROP_FOOD_PRIORITY));
 		}
 
 		// If we see some food and we are not carrying any
@@ -195,7 +196,7 @@ public class ScavengerAntBDI : ScavengerAnt
 			foreach (GameObject obj in foood) {
 				//If food is not being transported
 				if (!obj.GetComponent<Food>().Transport) {
-					desires.Add(new Desire(DesireType.CatchFood, obj.transform, danger, confidence)); //Add catch food belief
+					desires.Add(new Desire(DesireType.CatchFood, obj.transform, danger, confidence + DesirePriorities.CATCH_FOOD_PRIORITY)); //Add catch food belief
 				}
 			}
 		}
@@ -203,7 +204,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		if (enemies != null) { //Nearby enemies
 
 			foreach (GameObject obj in enemies) {
-				desires.Add(new Desire(DesireType.Run, obj.transform, danger, confidence)); //Add run belief
+				desires.Add(new Desire(DesireType.Run, obj.transform, danger, confidence + DesirePriorities.RUN_PRIORITY)); //Add run belief
 			}
 		}
 
@@ -211,10 +212,9 @@ public class ScavengerAntBDI : ScavengerAnt
 		if (desires.Count == 0) {
 
 			if(insideLabyrinth) {
-				desires.Add(new Desire(DesireType.Exit, labyrinthDoor, 2, 0));
-			}
-			else {
-				desires.Add(new Desire(DesireType.FindFood, null, 1, confidence));
+				desires.Add(new Desire(DesireType.Exit, labyrinthDoor, danger, confidence + DesirePriorities.EXIT_PRIORITY));
+			} else {
+				desires.Add(new Desire(DesireType.FindFood, null, danger, confidence + DesirePriorities.FIND_FOOD_PRIORITY));
 			}
 		}
 	}
@@ -237,7 +237,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		if (bestDesire != null) {
 
-			futureIntention = new Intention(bestDesire);
+			futureIntention = new Intention (bestDesire);
 		
 			if (intention == null || futureIntention.IntentionValue > intention.IntentionValue || (futureIntention.Type == intention.Type)) {
 
@@ -248,30 +248,18 @@ public class ScavengerAntBDI : ScavengerAnt
 				case DesireType.FindFood:
 					//Just do stuff
 					break;
-				case DesireType.CatchFood:
-
-					if(intention.IntentionDest != null) { 
-						navigation = true; 
-					} 
-					break;
-				case DesireType.DropFood:
-
-					if(intention.IntentionDest != null) {
-						navigation = true;
-					}
-					break;
-				case DesireType.Exit:
-
-					if(intention.IntentionDest != null) {
-						navigation = true;
-					}
-					break;
 				case DesireType.Run:
 					run = true;
+					break;
+				default : //CatchFood, DropFood and Exit all involve the same behaviour (navigation)
+				
+					if (intention.IntentionDest != null) { 
+						navigation = true; 
+					} 
 					break;
 				}
 			}
 		}
-		Debug.Log (intention.Type);
+		Debug.Log(intention.Type);
 	}
 }
