@@ -38,6 +38,9 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		navAgent = GetComponent<NavMeshAgent>();
 		navAgent.enabled = false;
+
+		guiStyle.fontSize = 8;
+		guiStyle.normal.textColor = Color.white;
 	}
 
 	// Called every fixed framerate frame
@@ -47,6 +50,17 @@ public class ScavengerAntBDI : ScavengerAnt
 		EvalBeliefs();
 		EvalDesires();
 		Move();
+	}
+
+	// Called per event
+	protected void OnGUI() {
+	
+		if (intention != null) {
+
+			worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
+			rect.Set(worldToScreen.x, Screen.height - worldToScreen.y, 80, 20);
+			GUI.Label(rect, intention.Type.ToString(), guiStyle);
+		}
 	}
 	
 	// Reactors
@@ -260,6 +274,5 @@ public class ScavengerAntBDI : ScavengerAnt
 				}
 			}
 		}
-		Debug.Log(intention.Type);
 	}
 }

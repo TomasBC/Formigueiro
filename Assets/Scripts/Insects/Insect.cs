@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class Insect : MonoBehaviour 
 {
-	protected bool insideLabyrinth = true;
-
 	// Public variables
 	public int speed = 20;
 
@@ -16,16 +14,26 @@ public class Insect : MonoBehaviour
 	public int randomMin = 4;
 	public int randomMax = 100;
 
-	protected bool collided = false;
+	// Flags
 	protected bool proceed = false;
+	protected bool collided = false;
+	protected bool insideLabyrinth = true;
 
 	// Protected variables
 	protected Rigidbody rigidBody;
 
+	// GUI Style
+	protected Rect rect;
+	protected GUIStyle guiStyle;
+	protected Vector3 worldToScreen;
+	
 	// Initialization
 	protected virtual void Start() 
 	{
 		rigidBody = GetComponent<Rigidbody>();
+
+		guiStyle = new GUIStyle();
+		rect = new Rect();
 	}
 
 	// Called every fixed framerate frame
