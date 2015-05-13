@@ -202,9 +202,9 @@ public class ScavengerAntBDI : ScavengerAnt
 		}
 
 		if (enemies != null) { //Nearby enemies
-
+			Debug.Log("Entrei");
 			foreach (GameObject obj in enemies) {
-				desires.Add(new Desire(DesireType.Run, obj.transform, danger, confidence + DesirePriorities.RUN_PRIORITY)); //Add run belief
+				desires.Add(new Desire(DesireType.Run, obj.transform, confidence, danger + DesirePriorities.RUN_PRIORITY)); //Add run belief
 			}
 		}
 
