@@ -30,17 +30,6 @@ public class EnemyBDI : Insect
 
 	private bool run = false;
 	private bool attacking = false;
-
-	// Called per event
-	protected void OnGUI() {
-		
-		if (intention != null) {
-			
-			worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
-			rect.Set(worldToScreen.x, Screen.height - worldToScreen.y, 80, 20);
-			GUI.Label(rect, intention.Type.ToString(), guiStyle);
-		}
-	}
 	
 	// Initialization
 	protected override void Start() 
@@ -56,7 +45,7 @@ public class EnemyBDI : Insect
 		navAgent = GetComponent<NavMeshAgent>();
 		navAgent.enabled = false;
 
-		guiStyle.fontSize = 10;
+		guiStyle.fontSize = 8;
 		guiStyle.normal.textColor = Color.black;
 	}
 	
@@ -68,6 +57,18 @@ public class EnemyBDI : Insect
 		EvalDesires();
 		Move();
 	}
+
+	// Called per event
+	protected void OnGUI() {
+		
+		if (intention != null) {
+			
+			worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
+			rect.Set(worldToScreen.x, Screen.height - worldToScreen.y, 80, 20);
+			GUI.Label(rect, intention.Type.ToString() + " - " + Mathf.Round(energy), guiStyle);
+		}
+	}
+
 	
 	// Reactors
 	protected override void Move() 

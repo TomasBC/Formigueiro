@@ -26,7 +26,7 @@ public class ScavengerAntBDI : ScavengerAnt
 	// Intentions and desires
 	private Intention intention;
 	private List<Desire> desires;
-
+	
 
 	// Initialization
 	protected override void Start() 
@@ -59,7 +59,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 			worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
 			rect.Set(worldToScreen.x, Screen.height - worldToScreen.y, 80, 20);
-			GUI.Label(rect, intention.Type.ToString(), guiStyle);
+			GUI.Label(rect, intention.Type.ToString() + " - " + Mathf.Round(energy), guiStyle);
 		}
 	}
 	
@@ -261,7 +261,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 				switch (intention.Type) {
 				case DesireType.FindFood:
-					//Just do stuff
+					//Just do stuff (Reactive behaviour)
 					break;
 				case DesireType.Run:
 					run = true;
