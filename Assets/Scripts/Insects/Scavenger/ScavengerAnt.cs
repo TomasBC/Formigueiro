@@ -14,6 +14,7 @@ public class ScavengerAnt : Insect
 	public float closeViewDistance = 5f;
 
 	protected bool run = false;
+	protected bool carryingFood = false;
 
 	// Initialization
 	protected override void Start() 
@@ -27,25 +28,16 @@ public class ScavengerAnt : Insect
 		base.FixedUpdate();
 	}
 	
-	// Sensors
-	protected bool CarryingFood() 
-	{
-		if (food != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-		
+	// Sensors		
 	protected override void OnCollisionEnter(Collision collision) 
 	{
 		//CarryFood?
-		if (collision.gameObject.tag.Equals("Food") && !CarryingFood()) {
+		if (collision.gameObject.tag.Equals("Food") && !carryingFood) {
 			Load(collision);
 		}
 
 		//QueenWall?
-		if (collision.gameObject.name.Equals("queen_wall") && CarryingFood()) {
+		if (collision.gameObject.name.Equals("queen_wall") && carryingFood) {
 			Unload();
 			collided = true;
 		}
@@ -67,8 +59,7 @@ public class ScavengerAnt : Insect
 
 		food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 
-		//Reset rotation
-		transform.rotation = Quaternion.identity;
+		carryingFood = true;
 	}
 	
 	protected virtual void Unload() 
@@ -82,6 +73,8 @@ public class ScavengerAnt : Insect
 
 		food = null;
 		foodRigidBody = null;
+
+		carryingFood = false;
 	}
 
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 

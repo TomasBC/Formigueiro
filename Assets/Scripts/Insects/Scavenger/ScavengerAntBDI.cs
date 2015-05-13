@@ -66,6 +66,10 @@ public class ScavengerAntBDI : ScavengerAnt
 	// Reactors
 	protected override void Move() 
 	{
+		// If carrying food move it along with the agent
+		if(carryingFood) {
+			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+		}
 		/*
 		 * Path finding navigation:
 		 * 
@@ -94,11 +98,6 @@ public class ScavengerAntBDI : ScavengerAnt
 
 				intention = null;
 				navigation = false;
-			}
-		
-			// Move food along with the agent
-			if(CarryingFood()) {
-				food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 			}
 		}
 
@@ -178,10 +177,10 @@ public class ScavengerAntBDI : ScavengerAnt
 
 			foreach (GameObject extra in extras) {
 
-				if (extra.name.Contains("labyrinth_door")) {
+				if (extra.name.Contains("labyrinth_exit")) {
 					labyrinthDoor = extra.transform;
 				}
-				else {
+				else if(extra.name.Contains("queen_door")) {
 					unloadZone = extra.transform;
 				}
 			}
@@ -200,17 +199,19 @@ public class ScavengerAntBDI : ScavengerAnt
 		}
 
 		// If we are carrying food
-		if (CarryingFood()) {
-			desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence + DesirePriorities.DROP_FOOD_PRIORITY));
+		if (carryingFood) {
+			desires.Add (new Desire (DesireType.DropFood, unloadZone, danger, confidence + DesirePriorities.DROP_FOOD_PRIORITY));
 		}
 
 		// If we see some food and we are not carrying any
-		if (foood != null && !CarryingFood()) {
+		else {
+			if (foood != null) {
 
-			foreach (GameObject obj in foood) {
-				//If food is not being transported
-				if (!obj.GetComponent<Food>().Transport) {
-					desires.Add(new Desire(DesireType.CatchFood, obj.transform, danger, confidence + DesirePriorities.CATCH_FOOD_PRIORITY)); //Add catch food belief
+				foreach (GameObject obj in foood) {
+					//If food is not being transported
+					if (!obj.GetComponent<Food>().Transport) {
+						desires.Add (new Desire (DesireType.CatchFood, obj.transform, danger, confidence + DesirePriorities.CATCH_FOOD_PRIORITY)); //Add catch food belief
+					}
 				}
 			}
 		}
@@ -266,7 +267,6 @@ public class ScavengerAntBDI : ScavengerAnt
 					run = true;
 					break;
 				default : //CatchFood, DropFood and Exit all involve the same behaviour (navigation)
-				
 					if (intention.IntentionDest != null) { 
 						navigation = true; 
 					} 

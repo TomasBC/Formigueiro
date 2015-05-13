@@ -118,8 +118,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 1, z: 1.5}
-  m_Center: {x: 0, y: .550000012, z: 0}
+  m_Size: {x: 1.5, y: .699999988, z: 1.5}
+  m_Center: {x: 0, y: .360000014, z: 0}
 --- !u!114 &11436046
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -163,6 +163,8 @@ MonoBehaviour:
   enemyImpact: 10
   friendsImpact: 5
   runDistance: 10
+  unloadZone: {fileID: 0}
+  labyrinthDoor: {fileID: 0}
 --- !u!195 &19590578
 NavMeshAgent:
   m_ObjectHideFlags: 1
@@ -171,15 +173,15 @@ NavMeshAgent:
   m_GameObject: {fileID: 179294}
   m_Enabled: 1
   m_Radius: .699999988
-  m_Speed: 8
-  m_Acceleration: 300
+  m_Speed: 14
+  m_Acceleration: 500
   avoidancePriority: 50
-  m_AngularSpeed: 100
+  m_AngularSpeed: 400
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1
+  m_Height: .699999988
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
