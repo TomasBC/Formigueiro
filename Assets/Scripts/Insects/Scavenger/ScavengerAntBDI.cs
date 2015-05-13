@@ -164,7 +164,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		// Clear desires
 		if (desires != null) {
-			desires.Clear ();
+			desires.Clear();
 		}
 	
 		// Gather information about beliefs: Food, Ants (Friends) and Enemies
@@ -216,7 +216,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		}
 
 		if (enemies != null) { //Nearby enemies
-			Debug.Log("Entrei");
+
 			foreach (GameObject obj in enemies) {
 				desires.Add(new Desire(DesireType.Run, obj.transform, confidence, danger + DesirePriorities.RUN_PRIORITY)); //Add run belief
 			}
