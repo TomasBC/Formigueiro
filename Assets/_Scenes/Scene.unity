@@ -3585,7 +3585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 177662, guid: 3669a7d05824c455c87d2298173785b4, type: 2}
-  spawnLimit: 0
+  spawnLimit: 4
   spawnTime: 4
   spawnPoints:
   - {fileID: 1351891504}

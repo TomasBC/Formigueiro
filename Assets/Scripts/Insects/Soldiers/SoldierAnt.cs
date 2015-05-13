@@ -40,7 +40,7 @@ public class SoldierAnt : Insect
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
 		//Concat Food and Enemies for checking
-		GameObject[] objs = GameObject.FindGameObjectsWithTag("Enemy").ToArray();
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("Enemy").Concat(GameObject.FindGameObjectsWithTag("Ant")).ToArray();
 		Dictionary<string, List<GameObject>> result;
 		
 		result = Utils.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);

@@ -1685,7 +1685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee710bb233f847888fae3ee46b55a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 15
   energy: 100
   maxEnergy: 100
   frameEnergyLoss: -.00100000005
