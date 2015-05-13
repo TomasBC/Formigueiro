@@ -358,6 +358,7 @@ GameObject:
   - 65: {fileID: 6565748}
   - 114: {fileID: 11492626}
   - 195: {fileID: 19515006}
+  - 114: {fileID: 11480806}
   m_Layer: 0
   m_Name: enemy_spider
   m_TagString: Enemy
@@ -1673,13 +1674,36 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11492626
+--- !u!114 &11480806
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 141390}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee710bb233f847888fae3ee46b55a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20
+  energy: 100
+  maxEnergy: 100
+  frameEnergyLoss: -.00100000005
+  randomMin: 4
+  randomMax: 100
+  enemyImpact: 10
+  friendsImpact: 5
+  runDistance: 10
+  fieldOfView: 90
+  longViewDistance: 25
+  closeViewDistance: 5
+--- !u!114 &11492626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 141390}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b07147107b104d92a1ef192d3b57733, type: 3}
   m_Name: 
@@ -1793,7 +1817,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 141390}
   m_Enabled: 1
   m_Radius: .5
-  m_Speed: 3.1400001
+  m_Speed: 8
   m_Acceleration: 500
   avoidancePriority: 50
   m_AngularSpeed: 350

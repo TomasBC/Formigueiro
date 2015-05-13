@@ -9,5 +9,6 @@ public enum DesireType
 	Run,
 	Follow,
 	Exit,
-	FindFood
+	FindFood,
+	Patrol
 }
