@@ -35,21 +35,22 @@ public class ScavengerAnt : Insect
 			Load(collision);
 			collided = true;
 		}
-
 		//QueenWall?
 		if (collision.gameObject.name.Equals("queen_wall")) {
 			Unload();
 			collided = true;
 		}
-
-		//Enemy?
-		if(collision.gameObject.tag.Equals("Enemy")) {
-			GameObject enemy = collision.gameObject;
-			UpdateEnergy(-(enemy.GetComponent<Enemy>().attackPower)); //Lose health
-		}
 		//SameWall?
 		if (collision.gameObject.tag.Equals("Wall")) {
 			collided = true;
+		}
+	}
+
+	protected void OnCollisionStay(Collision collision)
+	{
+		//Enemy?
+		if (collision.gameObject.tag.Equals("Enemy")) {
+			UpdateEnergy(-(collision.gameObject.GetComponent<Enemy>().attackPower)); //Lose health
 		}
 	}
 

@@ -33,6 +33,15 @@ public class SoldierAntReactive : SoldierAnt
 		}
 	}
 
+	// Sensors
+	protected void OnCollisionStay(Collision collision)
+	{
+		//Enemy?
+		if (collision.gameObject.tag.Equals("Enemy")) {
+			UpdateEnergy(-(collision.gameObject.GetComponent<EnemyReactive>().attackPower)); //Lose health
+		}
+	}
+
 	protected override void EvaluateFieldOfView()
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();

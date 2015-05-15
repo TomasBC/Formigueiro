@@ -14,7 +14,8 @@ public class SoldierBDI : SoldierAnt
 	// Intentions and desires
 	private Intention intention;
 	private List<Desire> desires;
-	
+
+	// Flags
 	private bool run = false;
 	private bool follow = false;
 	private bool attack = false;
@@ -51,6 +52,16 @@ public class SoldierBDI : SoldierAnt
 		EvalDesires();
 		Move();
 	}
+
+	// Sensors
+	protected void OnCollisionStay(Collision collision)
+	{
+		//Enemy?
+		if (collision.gameObject.tag.Equals("Enemy")) {
+			Debug.Log (collision.gameObject.GetComponent<EnemyBDI>().attackPower);
+			UpdateEnergy(-(collision.gameObject.GetComponent<EnemyBDI>().attackPower)); //Lose health
+		}
+	}
 	
 	// Reactors
 	protected override void Move() 
@@ -65,19 +76,17 @@ public class SoldierBDI : SoldierAnt
 		 */
 		if (attack || follow) {
 
-			if (intention == null || intention.IntentionDest == null || Vector3.Distance(transform.position, intention.IntentionDest.position) > longViewDistance) {
+			if (intention == null || intention.IntentionDest == null) {
 				follow = false;
 				attack = false;
 				intention = null;
 			}	
-
-			else if (follow && Vector3.Distance(transform.position, intention.IntentionDest.position) < 5f ||
-			         attack && Vector3.Distance(transform.position, intention.IntentionDest.position) < 2f) { 
-					/* Keep a certain distance when following or attacking */ 
+			else if (follow && Vector3.Distance(transform.position, intention.IntentionDest.position) < 5f) {
+				/* Keep a certain distance when following or attacking */ 
 			}
 			else {
 				transform.LookAt(intention.IntentionDest.transform.position);
-				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, this.speed * Time.fixedDeltaTime);
+				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, 0.6f * this.speed * Time.fixedDeltaTime);
 			}
 		}
 		/*
@@ -224,6 +233,7 @@ public class SoldierBDI : SoldierAnt
 					attack = false;
 					break;
 				case DesireType.Run:
+					transform.rotation = Quaternion.Inverse(transform.rotation); //Rotate backwards
 					run = true;
 					follow = false;
 					attack = false;

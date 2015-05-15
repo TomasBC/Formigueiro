@@ -33,13 +33,14 @@ public class ScavengerAntReactive : ScavengerAnt
 		}
 	}
 
+	// Sensors
 	protected override void EvaluateFieldOfView()
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
 		List<GameObject> listAux;
 
 		//If we find any sort of food and we are not carrying any, we rotate towards the object
-		if (objsInsideCone.TryGetValue("Food", out listAux) && carryingFood) {
+		if (objsInsideCone.TryGetValue("Food", out listAux) && !carryingFood) {
 				
 			for (int i = 0; i < listAux.Count; i++) {
 

@@ -100,7 +100,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 179294}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 1.00000001e-07
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
@@ -140,7 +140,6 @@ MonoBehaviour:
   randomMax: 250
   fieldOfView: 90
   longViewDistance: 20
-  closeViewDistance: 1
 --- !u!114 &11441346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -161,10 +160,9 @@ MonoBehaviour:
   randomMax: 250
   fieldOfView: 90
   longViewDistance: 20
-  closeViewDistance: 1
-  enemyImpact: 2
-  friendsImpact: 1
   runDistance: 15
+  unloadZone: {fileID: 0}
+  labyrinthDoor: {fileID: 0}
 --- !u!195 &19590578
 NavMeshAgent:
   m_ObjectHideFlags: 1

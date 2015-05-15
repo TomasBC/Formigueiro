@@ -33,7 +33,20 @@ public class EnemyReactive : Enemy
 			collided = false;
 		}
 	}
-	
+
+	// Sensors
+	protected void OnCollisionStay(Collision collision) {
+		
+		//Ant?
+		if (collision.gameObject.tag.Equals("Ant")) {
+			
+			//SoldierAnt?
+			if(collision.gameObject.name.Contains("soldier")) {
+				UpdateEnergy(-(collision.gameObject.GetComponent<SoldierAntReactive>().attackPower)); //Lose health with the attack
+			}
+		}
+	}
+
 	protected override void EvaluateFieldOfView()
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();

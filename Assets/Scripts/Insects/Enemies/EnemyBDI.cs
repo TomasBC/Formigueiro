@@ -53,6 +53,19 @@ public class EnemyBDI : Enemy
 			GUI.Label(rect, intention.Type.ToString() + " - " + Mathf.Round(energy), guiStyle);
 		}
 	}
+
+	// Sensors
+	protected void OnCollisionStay(Collision collision) {
+		
+		//Ant?
+		if (collision.gameObject.tag.Equals("Ant")) {
+			
+			//SoldierAnt?
+			if(collision.gameObject.name.Contains("soldier")) {
+				UpdateEnergy(-(collision.gameObject.GetComponent<SoldierBDI>().attackPower)); //Lose health with the attack
+			}
+		}
+	}
 	
 	// Reactors
 	protected override void Move() 
@@ -67,20 +80,15 @@ public class EnemyBDI : Enemy
 		 */
 		if (attack) {
 
-			if(intention == null || intention.IntentionDest == null || intention.Type != DesireType.Attack || 
-			   Vector3.Distance(transform.position, intention.IntentionDest.position) > longViewDistance) {
+			if(intention == null || intention.IntentionDest == null || intention.Type != DesireType.Attack) {
 				attack = false;
 				intention = null;
-
-			} else if (Vector3.Distance(transform.position, intention.IntentionDest.position) < 3f) { 
-				/* Keep a certain distance when attacking */ 
-			}
+			} 
 			else {
 				transform.LookAt(intention.IntentionDest.transform.position);
-				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, this.speed * Time.fixedDeltaTime);
+				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, 0.5f * this.speed * Time.fixedDeltaTime);
 			}
 		}
-		
 		/*
 		 *  Collision situation:
 		 *
@@ -217,6 +225,7 @@ public class EnemyBDI : Enemy
 					//Just do stuff
 					break;
 				case DesireType.Run:
+					transform.rotation = Quaternion.Inverse(transform.rotation); //Rotate backwards
 					run = true;
 					break;
 				}

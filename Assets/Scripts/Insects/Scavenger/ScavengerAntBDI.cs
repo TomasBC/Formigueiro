@@ -11,7 +11,7 @@ public class ScavengerAntBDI : ScavengerAnt
 	private Vector3 eulerAngleVelocity;
 
 	// Beliefs impact
-	public float runDistance = 15f;
+	public float runDistance = 20f;
 
 	// Beliefs	
 	public Transform unloadZone = null;
@@ -107,11 +107,6 @@ public class ScavengerAntBDI : ScavengerAnt
 				intention = null;
 				navigation = false;
 			}
-
-			// Carry food
-			if(carryingFood) {
-				food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
-			}
 		}
 		/*
 		 *  Collision situation:
@@ -126,7 +121,6 @@ public class ScavengerAntBDI : ScavengerAnt
 			Rotate(randomMin);
 			collided = false;
 		}
-
 	   /*
 		* Generic move situation:
 		* 
@@ -139,7 +133,6 @@ public class ScavengerAntBDI : ScavengerAnt
 			Rotate(randomMax);
 			base.Move();
 		}
-
 		/*
 		 * Run situation:
 		 * 
@@ -173,16 +166,22 @@ public class ScavengerAntBDI : ScavengerAnt
 				run = false;
 				intention = null;
 			}
-		} 
+		}
+
+		// Carry food
+		if(carryingFood) {
+			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+		}
 	}
 
 	//Communication
-	protected void SetKnowledge(GameObject gameObject){
-		if(unloadZone==null){
-			unloadZone=gameObject.GetComponent<ScavengerAntBDI>().unloadZone;
+	protected void SetKnowledge(GameObject gameObject) 
+	{
+		if (unloadZone == null) {
+			unloadZone = gameObject.GetComponent<ScavengerAntBDI>().unloadZone;
 		}
-		if(labyrinthDoor==null){
-			labyrinthDoor=gameObject.GetComponent<ScavengerAntBDI>().labyrinthDoor;
+		if (labyrinthDoor == null) {
+			labyrinthDoor = gameObject.GetComponent<ScavengerAntBDI>().labyrinthDoor;
 		}
 	}
 

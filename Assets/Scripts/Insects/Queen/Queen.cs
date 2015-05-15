@@ -15,7 +15,20 @@ public class Queen : Insect {
 		base.FixedUpdate();
 		Move();
 	}
+
+	// Reactors
+	protected override void Move() 
+	{
+		if (!collided) {
+			base.Move(); // Move forward
+			Rotate(randomMax);
+		} else {
+			Rotate(randomMin);
+			collided = false;
+		}
+	}
 	 
+	// Sensors
 	protected override void OnCollisionEnter(Collision collision) 
 	{
 		base.OnCollisionEnter(collision);
@@ -28,15 +41,5 @@ public class Queen : Insect {
 		}
 	}
 	
-	// Reactors
-	protected override void Move() 
-	{
-		if (!collided) {
-			base.Move(); // Move forward
-			Rotate(randomMax);
-		} else {
-			Rotate(randomMin);
-			collided = false;
-		}
-	}
+
 }

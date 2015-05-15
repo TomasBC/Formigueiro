@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Enemy : Insect 
 {
-	public float attackPower = 2f;
+	public float attackPower;
 	public float fieldOfView = 90f;
 	public float longViewDistance = 25f; 
 
@@ -31,18 +31,6 @@ public class Enemy : Insect
 		//Food?
 		if (collision.gameObject.tag.Equals("Food")) {
 			collided = true;
-		}
-	}
-
-	protected void OnCollisionStay(Collision collision) {
-
-		//Ant?
-		if (collision.gameObject.tag.Equals("Ant")) {
-			
-			//SoldierAnt?
-			if(collision.gameObject.name.Contains("soldier")) {
-				UpdateEnergy(-(collision.gameObject.GetComponent<SoldierAnt>().attackPower)); //Lose health with the attack
-			}
 		}
 	}
 
