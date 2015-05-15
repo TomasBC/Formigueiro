@@ -5,27 +5,23 @@ using System.Collections.Generic;
 
 public class SoldierBDI : SoldierAnt 
 {
-	// Navigation agent
-	private NavMeshAgent navAgent;
-	private bool navigation = false;
-	private Vector3 eulerAngleVelocity;
-	
 	// Beliefs impact
-	public int enemyImpact = 10;
-	public int friendsImpact = 5;
-	public float runDistance = 10f;
-	
+	public int enemyImpact = 2;
+	public int friendsImpact = 1;
+	public float runDistance = 15f;
+
 	private List<GameObject> ants;
 	private List<GameObject> enemies;
 	private List<GameObject> friends;
-	private List<GameObject> aux;
+	private List<GameObject> scavengers;
 	
 	// Intentions and desires
 	private Intention intention;
 	private List<Desire> desires;
 	
 	private bool run = false;
-	private bool attacking = false;
+	private bool follow = false;
+	private bool attack = false;
 	
 	// Called per event
 	protected void OnGUI() {
@@ -34,7 +30,7 @@ public class SoldierBDI : SoldierAnt
 			
 			worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
 			rect.Set(worldToScreen.x, Screen.height - worldToScreen.y, 80, 20);
-			GUI.Label(rect, intention.Type.ToString(), guiStyle);
+			GUI.Label(rect, intention.Type.ToString() + " - " + Mathf.Round(energy), guiStyle);
 		}
 	}
 	
@@ -42,17 +38,12 @@ public class SoldierBDI : SoldierAnt
 	protected override void Start() 
 	{
 		base.Start();
-		
-		ants = new List<GameObject>();
-		friends = new List<GameObject>();
-		
+
 		desires = new List<Desire>();
-		eulerAngleVelocity = Vector3.zero;
-		
-		navAgent = GetComponent<NavMeshAgent>();
-		navAgent.enabled = false;
-		
-		guiStyle.fontSize = 10;
+		friends = new List<GameObject>();
+		scavengers = new List<GameObject>();
+
+		guiStyle.fontSize = 8;
 		guiStyle.normal.textColor = Color.blue;
 	}
 	
@@ -69,78 +60,40 @@ public class SoldierBDI : SoldierAnt
 	protected override void Move() 
 	{
 		/*
-		 * Path finding navigation:
-		 * 
-		 * 1º situation - occurs when the agent (scavenger ant), just 
-		 * spawned inside the labyrinth and needs to find its way out.
-		 * 
-		 * 2º situation - occurs when the agent carries some piece of
-		 * food and needs to get back to the labyrinth entrance and
-		 * unload it.
-		 * 
-		 */
-		/*
-		 * Run situation:
+		 * Attack/Follow situation:
 		 * 
 		 * This situation occurs when the agent spots an enemy. The agent
-		 * starts running for his life and drops the food if transporting
-		 * any. It runs for a certain distance and eventually leaves the 
-		 * run state.
+		 * starts an attack against the enemy. This also works for follow 
+		 * where a similar behaviour is triggered.
 		 * 
 		 */
-		
-		if (attacking) {
-			if(intention != null && intention.Type == DesireType.Attack){
-				if(Vector3.Distance(transform.position, intention.IntentionDest.position) > 15) {
-					attacking = false;
-					intention = null;
-					return;
-				}
-				
-				Vector3 targetDir = intention.IntentionDest.transform.position - transform.position;
-				float step = speed * Time.deltaTime;
-				Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
-				transform.rotation = Quaternion.LookRotation(newDir);
-				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, this.speed*Time.fixedDeltaTime);
-				return;
-			}
-		}
-		
-		if (navigation) {
-			
-			// Define navAgent destination
-			if (!navAgent.enabled) {
-				
-				navAgent.enabled = true;
-				navAgent.ResetPath();
-				
-				navAgent.destination = intention.IntentionDest.transform.position;
-				Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);	
-			}
-			
-			// Check if we reached out destination
-			if(Utils.ReachedDestination(navAgent, this.gameObject) && !(intention.Type == DesireType.Attack)) {
-				
+		if (attack || follow) {
+
+			if (intention == null || Vector3.Distance(transform.position, intention.IntentionDest.position) >= runDistance) {
+			 	follow = false;
+				attack = false;
 				intention = null;
-				navigation = false;
+			}	
+
+			else if (follow && Vector3.Distance(transform.position, intention.IntentionDest.position) < 5f) { 
+				/* Keep a certain distance when following */ 
 			}
-			
+			else {
+				transform.LookAt(intention.IntentionDest.transform.position);
+				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, 0.5f * this.speed * Time.fixedDeltaTime);
+			}
 		}
-		
 		/*
-		 *  Colision situation:
+		 *  Collision situation:
 		 *
-		 *	This situation occurs when the agent colides with some obstacle,
+		 *	This situation occurs when the agent collides with some obstacle,
 		 *	i.e walls, enemies, ants, and provides a random rotation across
 		 *	three different values (90º, -90º, 180º). This allows the agent
 		 *	to proceed with its actions.
 		 * 
 		 */
 		else if (collided && !proceed) {
-			
 			Rotate(randomMin);
-			base.Move();
-			
 			collided = false;
 		}
 		
@@ -167,84 +120,73 @@ public class SoldierBDI : SoldierAnt
 		 * 
 		 */
 		if (run) {
-			
-			if(navAgent.enabled) {
-				navigation = false;
+
+			if(intention == null || intention.Type != DesireType.Run || 
+			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
+
+				speedRunning = false;
+				speed -= speedRunIncrement;
 				
-				navAgent.ResetPath();
-				navAgent.enabled = false;
-			}
-			
-			if(Vector3.Distance(transform.position, intention.IntentionDest.position) > 10) {
 				run = false;
 				intention = null;
 			}
+
+			// Increment speed
+			if(!speedRunning) {
+				speedRunning = true;
+				speed += speedRunIncrement;
+			}
 		}
 	}
-	
-	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
-	{
-		//Get active food
-		GameObject[] objs = GameObject.FindGameObjectsWithTag("Ant").Concat(GameObject.FindGameObjectsWithTag("Enemy")).ToArray();
-		
-		return Utils.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
-	}
-	
+
 	// BDI Evaluators	
 	protected void EvalBeliefs()
 	{
+		// Clear
+		desires.Clear();
+		friends.Clear();
+		scavengers.Clear();
+
+		// Gather information about beliefs: Ants (Friends) and Enemies
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
-		
-		friends.Clear ();
-		ants.Clear ();
-		
-		// Clear desires
-		if (desires != null) {
-			desires.Clear ();
-		}
-		
-		// Gather information about beliefs: Food, Ants (Friends) and Enemies
-		objsInsideCone.TryGetValue("Ant", out aux);
+		objsInsideCone.TryGetValue("Ant", out ants);
 		objsInsideCone.TryGetValue("Enemy", out enemies);
-		
-		if (aux != null) {
-			foreach (GameObject ant in aux) {
-				if (ant.name.Contains ("Soldier"))
-					friends.Add (ant);
-				else
-					ants.Add (ant);
-			}
-		}
-		
+
 		// Calculate danger and confidence
-		float danger = 0f;
-		float confidence = 0f;
-		
+		int danger = 0;
+		int confidence = 0;
+
 		if (enemies != null) {
 			danger = enemies.Count * enemyImpact;
 		}
-		
-		if (friends != null) {
-			confidence = friends.Count * friendsImpact;
-		}
-		
-	/*	if (ants.Count != 0) {
-			foreach(GameObject obj in ants)
-				desires.Add(new Desire(DesireType.Attack, obj.transform, danger, confidence + DesirePriorities.ATTACK_PRIORITY));
-		}*/
 
-		if (enemies != null && enemies.Count != 0) {
-			foreach(GameObject obj in ants){
-				if(danger > confidence || energy < 20)
-					desires.Add(new Desire(DesireType.Run, obj.transform, confidence, danger + DesirePriorities.RUN_PRIORITY)); 
-				else
-					desires.Add(new Desire(DesireType.Attack, obj.transform, danger, confidence + DesirePriorities.ATTACK_PRIORITY)); 
+		if (ants != null) {
+
+			foreach (GameObject ant in ants) {
+				if (ant.name.Contains("soldier")) {
+					friends.Add(ant);
+				} else {
+					scavengers.Add(ant);
+				}
+			}
+			confidence = friends.Count * friendsImpact;
+
+			//Order by proximity and follow the closer one
+			if(scavengers.Count > 0) {
+				scavengers.OrderBy(scavenger => (scavenger.transform.position - transform.position).sqrMagnitude); 
+				desires.Add(new Desire(DesireType.Follow, scavengers[0].transform, danger, confidence, DesirePriorities.FOLLOW_PRIORITY));
 			}
 		}
-		
+
+		if (enemies != null) {
+			//Order by proximity and run/attack the closer one
+			enemies.OrderBy(enemy => (enemy.transform.position - transform.position).sqrMagnitude); 
+			desires.Add(new Desire(DesireType.Attack, enemies[0].transform, danger, confidence, DesirePriorities.ATTACK_PRIORITY)); 
+			desires.Add(new Desire(DesireType.Run, enemies[0].transform, confidence, danger, DesirePriorities.RUN_PRIORITY)); 
+		}
 		// Default beliefs (Exit or FindFood)  
 		if (desires.Count == 0) {
-			desires.Add(new Desire(DesireType.Patrol, null, danger, confidence + DesirePriorities.PATROL_PRIORITY));
+			desires.Add(new Desire(DesireType.Patrol, null, danger, confidence, DesirePriorities.PATROL_PRIORITY));
 		}
 	}
 	
@@ -257,7 +199,6 @@ public class SoldierBDI : SoldierAnt
 		
 		//Get best desire
 		foreach (Desire desire in desires) {
-			
 			if (desire.DesireValue > desireValue) {
 				bestDesire = desire;
 				desireValue = desire.DesireValue;
@@ -265,38 +206,28 @@ public class SoldierBDI : SoldierAnt
 		}
 		
 		if (bestDesire != null) {
-			
+
 			futureIntention = new Intention (bestDesire);
-			
-			if (intention == null || 
-			    futureIntention.IntentionValue > intention.IntentionValue || 
-			    (futureIntention.Type == intention.Type)) {
+
+			if (intention == null || futureIntention.IntentionValue > intention.IntentionValue || futureIntention.Type == intention.Type) {
 				
 				//Update current intention
 				intention = futureIntention;
-				
+
 				switch (intention.Type) {
 				case DesireType.Attack:
-					attacking = true;
+					attack = true;
+					follow = false;
 					break;
-				case DesireType.Patrol:
-					//Just do stuff
-					break;
-				case DesireType.FindFood:
-					//Just do stuff
+				case DesireType.Follow:
+					follow = true;
+					attack = false;
 					break;
 				case DesireType.Run:
 					run = true;
 					break;
-				default : //CatchFood, DropFood and Exit all involve the same behaviour (navigation)
-					
-					if (intention.IntentionDest != null) { 
-						navigation = true; 
-					} 
-					break;
 				}
 			}
 		}
-		Debug.Log(intention.Type);
 	}
 }

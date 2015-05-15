@@ -27,8 +27,9 @@ GameObject:
   - 4: {fileID: 422492}
   - 65: {fileID: 6542434}
   - 54: {fileID: 5428524}
-  - 195: {fileID: 19549398}
+  - 114: {fileID: 11490642}
   - 114: {fileID: 11422370}
+  - 195: {fileID: 19549398}
   m_Layer: 0
   m_Name: ant_soldier
   m_TagString: Ant
@@ -99,14 +100,14 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177662}
   serializedVersion: 2
-  m_Mass: 1.00000001e-07
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!65 &6542434
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -130,7 +131,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17e2818506833467a81394b8137ec2dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 25
+  speedRunIncrement: 10
+  energy: 100
+  maxEnergy: 100
+  frameEnergyLoss: -.00100000005
+  randomMin: 4
+  randomMax: 250
+  attackPower: 5
+  shieldEnergy: 100
+  fieldOfView: 90
+  longViewDistance: 30
+  enemyImpact: 2
+  friendsImpact: 1
+  runDistance: 15
+--- !u!114 &11490642
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 177662}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753ca0974b94942c59c77c37fd099a2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   speed: 20
+  speedRunIncrement: 10
   energy: 100
   maxEnergy: 100
   frameEnergyLoss: -.00100000005
@@ -139,14 +166,7 @@ MonoBehaviour:
   attackPower: 5
   shieldEnergy: 100
   fieldOfView: 90
-  longViewDistance: 20
-  closeViewDistance: 5
-  enemyImpact: 10
-  friendsImpact: 5
-  runDistance: 10
-  fieldOfView: 90
-  longViewDistance: 25
-  closeViewDistance: 5
+  longViewDistance: 30
 --- !u!195 &19549398
 NavMeshAgent:
   m_ObjectHideFlags: 1

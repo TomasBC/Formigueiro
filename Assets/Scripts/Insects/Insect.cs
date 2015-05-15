@@ -6,6 +6,7 @@ public class Insect : MonoBehaviour
 {
 	// Public variables
 	public int speed = 20;
+	public int speedRunIncrement = 10;
 
 	public float energy = 100.0f;
 	public float maxEnergy = 100.0f;
@@ -17,7 +18,9 @@ public class Insect : MonoBehaviour
 	// Flags
 	protected bool proceed = false;
 	protected bool collided = false;
+	protected bool speedRunning = false;
 	protected bool insideLabyrinth = true;
+
 
 	// Protected variables
 	protected Rigidbody rigidBody;
@@ -52,7 +55,8 @@ public class Insect : MonoBehaviour
 			//LabyrinthExit?
 			if(collider.gameObject.name.Equals("labyrinth_exit")) {
 				insideLabyrinth = false;
-			} else { //LabyrinthEntrance?
+			} //LabyrinthEntrance?
+			else { 
 				insideLabyrinth = true;
 			}
 		}
@@ -91,16 +95,7 @@ public class Insect : MonoBehaviour
 			break; 
 		}
 	}
-
-	protected void RotateTowards(Transform targetPos) 
-	{
-		Vector3 targetPosition = transform.position;
-		targetPosition.y = 0.0f;
-
-		//Rotate towards the target
-		transform.LookAt(targetPosition);
-	}
-
+	
 	public void UpdateEnergy(float increment)
 	{	
 		energy += increment;

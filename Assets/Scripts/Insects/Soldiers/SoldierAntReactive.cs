@@ -39,9 +39,8 @@ public class SoldierAntReactive : SoldierAnt
 		List<GameObject> listAux;
 		
 		//If we find any sort of enemy, we rotate towards it
-		if(objsInsideCone.TryGetValue("Enemy", out listAux)) {
-			
-			RotateTowards(listAux[Random.Range(0, listAux.Count)].transform); //Randomly pick an enemy
+		if(objsInsideCone.TryGetValue("Enemy", out listAux)) {	
+			transform.LookAt(listAux[Random.Range(0, listAux.Count)].transform.position); //Randomly pick an enemy
 			proceed = true;
 		}
 	}

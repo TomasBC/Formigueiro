@@ -1023,6 +1023,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2091303470}
   m_RootOrder: 1
+--- !u!1 &689495219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 689495220}
+  m_Layer: 0
+  m_Name: food_spawn_point_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &689495220
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 689495219}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 25, y: 0, z: 40}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 697472602}
+  m_RootOrder: 6
 --- !u!1 &697472601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,6 +1081,8 @@ Transform:
   - {fileID: 1444100949}
   - {fileID: 2083743982}
   - {fileID: 1947754522}
+  - {fileID: 1834001725}
+  - {fileID: 689495220}
   m_Father: {fileID: 611346301}
   m_RootOrder: 0
 --- !u!114 &697472603
@@ -1068,14 +1097,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 117952, guid: 01ac4e01f556447a0887be274ebe0dd1, type: 2}
-  spawnLimit: 5
-  spawnTime: 2
+  spawnLimit: 10
+  spawnTime: 3
   spawnPoints:
   - {fileID: 1780853235}
   - {fileID: 1000221782}
   - {fileID: 1444100949}
   - {fileID: 2083743982}
   - {fileID: 1947754522}
+  - {fileID: 1834001725}
+  - {fileID: 689495220}
 --- !u!1 &707859756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,8 +1224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 179294, guid: 094663c6c98da4a468ccfba47994bb30, type: 2}
-  spawnLimit: 3
-  spawnTime: 2
+  spawnLimit: 5
+  spawnTime: 3
   spawnPoints:
   - {fileID: 558039261}
   - {fileID: 944211119}
@@ -1672,7 +1703,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1000221781}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 80, y: 0, z: 100}
+  m_LocalPosition: {x: 80, y: 0, z: 130}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 697472602}
@@ -2794,7 +2825,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1444100948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 120}
+  m_LocalPosition: {x: 80, y: 0, z: 80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 697472602}
@@ -3395,6 +3426,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1817380618}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1834001724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1834001725}
+  m_Layer: 0
+  m_Name: food_spawn_point_6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1834001725
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1834001724}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60, y: 0, z: 80}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 697472602}
+  m_RootOrder: 5
 --- !u!1 &1875519319
 GameObject:
   m_ObjectHideFlags: 0
@@ -3585,7 +3643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 177662, guid: 3669a7d05824c455c87d2298173785b4, type: 2}
-  spawnLimit: 4
+  spawnLimit: 5
   spawnTime: 4
   spawnPoints:
   - {fileID: 1351891504}
@@ -3614,7 +3672,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1947754521}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 40}
+  m_LocalPosition: {x: 25, y: 0, z: 80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 697472602}
@@ -4006,7 +4064,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2083743981}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 80}
+  m_LocalPosition: {x: 25, y: 0, z: 120}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 697472602}
@@ -4054,7 +4112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 141390, guid: 866beb6ac94310c4bb966d0d81e5ab15, type: 2}
-  spawnLimit: 3
+  spawnLimit: 0
   spawnTime: 3
   spawnPoints:
   - {fileID: 1106055641}

@@ -3,14 +3,8 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyReactive : Insect {
-
-	public float attackPower = 5.0f;
-
-	public float fieldOfView = 90f;
-	public float longViewDistance = 20f; 
-	public float closeViewDistance = 5f;
-
+public class EnemyReactive : Enemy 
+{
 	// Initialization
 	protected override void Start() 
 	{
@@ -23,24 +17,6 @@ public class EnemyReactive : Insect {
 		base.FixedUpdate();
 		EvaluateFieldOfView();
 		Move();
-	}
-
-	// Sensors
-	protected override void OnCollisionEnter(Collision collision) {
-
-		base.OnCollisionEnter(collision);
-
-		//Ant?
-		if (collision.gameObject.tag.Equals("Ant")) {
-			collision.gameObject.GetComponent<Insect>().UpdateEnergy(-attackPower); //Attack
-			UpdateEnergy(attackPower * 0.5f); // Gain energy with the attack
-
-			collided = true;
-		}
-		//Food?
-		if (collision.gameObject.tag.Equals("Food")) {
-			collided = true;
-		}
 	}
 	
 	// Reactors
@@ -57,18 +33,7 @@ public class EnemyReactive : Insect {
 			collided = false;
 		}
 	}
-
-	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
-	{
-		//Get active ants
-		GameObject[] objs = GameObject.FindGameObjectsWithTag("Ant").ToArray();
-		Dictionary<string, List<GameObject>> result;
-
-		result = Utils.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
-
-		return result;
-	}
-
+	
 	protected override void EvaluateFieldOfView()
 	{
 		Dictionary<string, List<GameObject>> objsInsideCone = CheckFieldOfView();
@@ -76,8 +41,7 @@ public class EnemyReactive : Insect {
 
 		//If we find any ant, we rotate towards it
 		if (objsInsideCone.TryGetValue("Ant", out listAux)) {
-
-			RotateTowards(listAux[Random.Range(0, listAux.Count)].transform); //Randomly pick a ant
+			transform.LookAt(listAux[Random.Range(0, listAux.Count)].transform.position); //Randomly pick a ant
 			proceed = true;
 		}
 	}

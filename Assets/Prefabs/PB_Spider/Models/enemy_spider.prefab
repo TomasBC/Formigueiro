@@ -357,7 +357,6 @@ GameObject:
   - 54: {fileID: 5441902}
   - 65: {fileID: 6565748}
   - 114: {fileID: 11492626}
-  - 195: {fileID: 19515006}
   - 114: {fileID: 11480806}
   m_Layer: 0
   m_Name: enemy_spider
@@ -909,7 +908,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 141390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 28.6000004, y: 0, z: 111.889999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 449654}
@@ -1637,14 +1636,14 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 141390}
   serializedVersion: 2
-  m_Mass: 1.00000001e-07
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!65 &6565748
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1655,7 +1654,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 2, z: 3.5}
+  m_Size: {x: 6, y: 2, z: 3.5}
   m_Center: {x: 0, y: 1, z: .5}
 --- !u!95 &9565046
 Animator:
@@ -1686,17 +1685,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
+  speedRunIncrement: 5
   energy: 100
   maxEnergy: 100
   frameEnergyLoss: -.00100000005
   randomMin: 4
-  randomMax: 100
-  enemyImpact: 10
-  friendsImpact: 5
-  runDistance: 10
+  randomMax: 400
+  attackPower: 5
   fieldOfView: 90
-  longViewDistance: 25
+  longViewDistance: 30
   closeViewDistance: 5
+  enemyImpact: 2
+  friendsImpact: 1
+  runDistance: 10
 --- !u!114 &11492626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1708,7 +1709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b07147107b104d92a1ef192d3b57733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 15
+  speedRunIncrement: 5
   energy: 10
   maxEnergy: 100
   frameEnergyLoss: -.00100000005
@@ -1716,8 +1718,8 @@ MonoBehaviour:
   randomMax: 600
   attackPower: 5
   fieldOfView: 90
-  longViewDistance: 20
-  closeViewDistance: 5
+  longViewDistance: 30
+  closeViewDistance: 1
 --- !u!137 &13737038
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -1809,26 +1811,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -.418104768, y: .277086586, z: 4.05311584e-05}
     m_Extent: {x: 2.43806124, y: 1.26289558, z: 2.98019767}
   m_DirtyAABB: 0
---- !u!195 &19515006
-NavMeshAgent:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 141390}
-  m_Enabled: 1
-  m_Radius: .5
-  m_Speed: 8
-  m_Acceleration: 500
-  avoidancePriority: 50
-  m_AngularSpeed: 350
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

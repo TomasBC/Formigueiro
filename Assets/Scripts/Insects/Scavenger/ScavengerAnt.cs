@@ -11,7 +11,6 @@ public class ScavengerAnt : Insect
 	
 	public float fieldOfView = 90f;
 	public float longViewDistance = 25f; 
-	public float closeViewDistance = 5f;
 
 	protected bool run = false;
 	protected bool carryingFood = false;
@@ -32,49 +31,68 @@ public class ScavengerAnt : Insect
 	protected override void OnCollisionEnter(Collision collision) 
 	{
 		//CarryFood?
-		if (collision.gameObject.tag.Equals("Food") && !carryingFood) {
+		if (collision.gameObject.tag.Equals("Food")) {
 			Load(collision);
+			collided = true;
 		}
 
 		//QueenWall?
-		if (collision.gameObject.name.Equals("queen_wall") && carryingFood) {
+		if (collision.gameObject.name.Equals("queen_wall")) {
 			Unload();
 			collided = true;
 		}
 
+		//Enemy?
+		if(collision.gameObject.tag.Equals("Enemy")) {
+			GameObject enemy = collision.gameObject;
+			UpdateEnergy(-(enemy.GetComponent<Enemy>().attackPower)); //Lose health
+		}
 		base.OnCollisionEnter(collision);
 	}
 	
 	// Reactors
+	protected override void Move() {
+
+		base.Move();
+
+		if (carryingFood) {
+			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+		}
+	}
+	
 	protected virtual void Load(Collision collision) 
 	{
-		food = collision.gameObject;
-		foodRigidBody = food.GetComponent<Rigidbody>();
+		if (!carryingFood) {
 
-		UpdateEnergy(food.GetComponent<Food>().ConsumeEnergy(0.2f)); // Gather 20% of the food energy
-		food.GetComponent<Food>().Transport = true;
+			food = collision.gameObject;
+			foodRigidBody = food.GetComponent<Rigidbody>();
 
-		foodRigidBody.useGravity = false;
-		foodRigidBody.freezeRotation = true;
+			food.GetComponent<Food>().Transport = true;
+			UpdateEnergy(food.GetComponent<Food>().ConsumeEnergy(0.2f)); // Gather 20% of the food energy
 
-		food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+			foodRigidBody.useGravity = false;
+			foodRigidBody.freezeRotation = true;
 
-		carryingFood = true;
+			carryingFood = true;
+		}
 	}
 	
 	protected virtual void Unload() 
 	{
 		//Throw food
-		foodRigidBody.useGravity = true;
-		foodRigidBody.freezeRotation = false;
+		if (carryingFood) {
 
-		foodRigidBody.AddForce(transform.forward * 400.0f);
-		food.GetComponent<Food>().Transport = false;
+			foodRigidBody.useGravity = true;
+			foodRigidBody.freezeRotation = false;
 
-		food = null;
-		foodRigidBody = null;
+			food.GetComponent<Food>().Transport = false;
+			foodRigidBody.AddForce (transform.forward * 400.0f);
+	
+			food = null;
+			foodRigidBody = null;
 
-		carryingFood = false;
+			carryingFood = false;
+		}
 	}
 
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
@@ -85,6 +103,6 @@ public class ScavengerAnt : Insect
 						   (GameObject.FindGameObjectsWithTag("Enemy")).Concat
 				 		   (GameObject.FindGameObjectsWithTag("Labyrinth")).ToArray();
 
-		return Utils.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
+		return Utils.CheckFieldOfView(gameObject, objs, fieldOfView, longViewDistance);
 	}
 }

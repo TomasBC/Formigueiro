@@ -11,7 +11,6 @@ public class SoldierAnt : Insect
 
 	public float fieldOfView = 90f;
 	public float longViewDistance = 20f; 
-	public float closeViewDistance = 5f;
 
 	// Initialization
 	protected override void Start()
@@ -32,19 +31,15 @@ public class SoldierAnt : Insect
 
 		//Enemy?
 		if (collision.gameObject.tag.Equals("Enemy")) {
-			collision.gameObject.GetComponent<EnemyReactive>().UpdateEnergy(-attackPower); //Attack
-			collided = true;
+			UpdateEnergy(-(collision.gameObject.GetComponent<Enemy>().attackPower)); //Lose health
 		}
+		UpdateEnergy(attackPower * 0.5f); // Gain energy with the attack
 	}
 
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 
 	{
 		//Concat Food and Enemies for checking
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("Enemy").Concat(GameObject.FindGameObjectsWithTag("Ant")).ToArray();
-		Dictionary<string, List<GameObject>> result;
-		
-		result = Utils.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance, closeViewDistance);
-		
-		return result;
+		return Utils.CheckFieldOfView(this.gameObject, objs, fieldOfView, longViewDistance);
 	}
 }

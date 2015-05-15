@@ -5,15 +5,10 @@ using System.Collections.Generic;
 public class Utils : MonoBehaviour 
 {
 	// View cone related methods
-	public static bool CheckIfInsideCone(GameObject obj, GameObject objToCompareTo, float fieldOfView, float longViewDistance, float closeViewDistance) 
+	public static bool CheckIfInsideCone(GameObject obj, GameObject objToCompareTo, float fieldOfView, float longViewDistance) 
 	{
 		RaycastHit hit; //Out hit
 		Vector3 rayDirection = objToCompareTo.transform.position - obj.transform.position;
-
-		// If the objToCompareTo is close to this object and is in front of it, then return true
-		if(Vector3.Angle(rayDirection, obj.transform.forward) < 90 && Vector3.Distance(obj.transform.position, objToCompareTo.transform.position) <= closeViewDistance) {
-			return true;
-		}
 
 		// Detect if objToCompareTo is within the field of view
 		if(Vector3.Angle(rayDirection, obj.transform.forward) < fieldOfView * 0.5f) {
@@ -33,14 +28,14 @@ public class Utils : MonoBehaviour
 		return false;
 	}
 
-	public static Dictionary<string, List<GameObject>> CheckFieldOfView(GameObject obj, GameObject[] objs, float fieldOfView, float longViewDistance, float closeViewDistance) 
+	public static Dictionary<string, List<GameObject>> CheckFieldOfView(GameObject obj, GameObject[] objs, float fieldOfView, float longViewDistance) 
 	{
 		Dictionary<string, List<GameObject>> result = new Dictionary<string, List<GameObject>>();
 		List<GameObject> auxList;
 
 		for(int i = 0; i < objs.Length; i++) {
 			
-			if(Utils.CheckIfInsideCone(obj, objs[i], fieldOfView, longViewDistance, closeViewDistance)) {
+			if(Utils.CheckIfInsideCone(obj, objs[i], fieldOfView, longViewDistance)) {
 
 				if(result.TryGetValue(objs[i].tag, out auxList)) { //If keyTag exists we add the object to the corresponding list
 					auxList.Add(objs[i]);
@@ -83,7 +78,6 @@ public class Utils : MonoBehaviour
 				
 					// Reset rotation
 					gameObject.transform.rotation = Quaternion.identity;
-
 					return true;
 				}
 			}
