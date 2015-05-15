@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScavengerAntReactive : ScavengerAnt 
+public class ScavengerAntReactive : ScavengerAnt
 {	
 	// Initialization
 	protected override void Start() 

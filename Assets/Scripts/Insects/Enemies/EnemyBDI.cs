@@ -73,6 +73,9 @@ public class EnemyBDI : Enemy
 			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
 				attack = false;
 				intention = null;
+
+			} else if (Vector3.Distance(transform.position, intention.IntentionDest.position) < 2f) { 
+				/* Keep a certain distance when following */ 
 			}
 			else {
 				transform.LookAt(intention.IntentionDest.transform.position);
@@ -134,7 +137,6 @@ public class EnemyBDI : Enemy
 			}
 		}
 	}
-	
 
 	// BDI Evaluators	
 	protected void EvalBeliefs()
@@ -208,7 +210,6 @@ public class EnemyBDI : Enemy
 				
 				switch (intention.Type) {
 				case DesireType.Attack:
-					Debug.Log ("ATTACK");
 					attack = true;
 					break;
 				case DesireType.Patrol:

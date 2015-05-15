@@ -86,7 +86,7 @@ public class ScavengerAnt : Insect
 			foodRigidBody.freezeRotation = false;
 
 			food.GetComponent<Food>().Transport = false;
-			foodRigidBody.AddForce (transform.forward * 400.0f);
+			foodRigidBody.AddForce(transform.forward * 400.0f * Time.deltaTime);
 	
 			food = null;
 			foodRigidBody = null;

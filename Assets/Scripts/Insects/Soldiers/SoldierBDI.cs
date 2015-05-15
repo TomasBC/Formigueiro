@@ -75,7 +75,7 @@ public class SoldierBDI : SoldierAnt
 				intention = null;
 			}	
 
-			else if (follow && Vector3.Distance(transform.position, intention.IntentionDest.position) < 5f) { 
+			else if (Vector3.Distance(transform.position, intention.IntentionDest.position) < 2f) { 
 				/* Keep a certain distance when following */ 
 			}
 			else {

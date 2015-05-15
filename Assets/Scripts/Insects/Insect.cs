@@ -20,9 +20,8 @@ public class Insect : MonoBehaviour
 	protected bool collided = false;
 	protected bool speedRunning = false;
 	protected bool insideLabyrinth = true;
-
-
-	// Protected variables
+	
+	// RigidBody
 	protected Rigidbody rigidBody;
 
 	// GUI Style
