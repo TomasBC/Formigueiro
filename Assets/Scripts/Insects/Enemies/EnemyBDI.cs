@@ -69,7 +69,7 @@ public class EnemyBDI : Enemy
 		 */
 		if (attack) {
 
-			if(intention == null || intention.Type == DesireType.Attack || 
+			if(intention == null || intention.Type != DesireType.Attack || 
 			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
 				attack = false;
 				intention = null;
@@ -117,6 +117,11 @@ public class EnemyBDI : Enemy
 		 */
 		if (run) {
 
+			// Increment speed
+			if(!speedRunning) {
+				speedRunning = true;
+				speed += speedRunIncrement;
+			}
 
 			if(intention == null || intention.Type != DesireType.Run || 
 			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
@@ -126,12 +131,6 @@ public class EnemyBDI : Enemy
 				
 				run = false;
 				intention = null;
-			}
-
-			// Increment speed
-			if(!speedRunning) {
-				speedRunning = true;
-				speed += speedRunIncrement;
 			}
 		}
 	}
@@ -162,7 +161,7 @@ public class EnemyBDI : Enemy
 
 			foreach (GameObject ant in ants) {
 
-				if (ant.name.Contains("soldier")) {
+				if (ant.name.Contains("Soldier")) {
 					soldiers.Add(ant);
 				} else {
 					scavengers.Add(ant);
@@ -209,6 +208,7 @@ public class EnemyBDI : Enemy
 				
 				switch (intention.Type) {
 				case DesireType.Attack:
+					Debug.Log ("ATTACK");
 					attack = true;
 					break;
 				case DesireType.Patrol:

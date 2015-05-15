@@ -138,26 +138,26 @@ public class ScavengerAntBDI : ScavengerAnt
 		 */
 		if (run) {
 		
-			if(intention == null || intention.Type != DesireType.Run || Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
-				speedRunning = false;
-				speed -= speedRunIncrement;
-				
-				run = false;
-				intention = null;
+			// Increment speed
+			if (!speedRunning) {
+				speedRunning = true;
+				speed += speedRunIncrement;
 			}
 
 			Unload(); // Unload food
-
+			
 			if (navAgent.enabled) {
 				navigation = false;
 				navAgent.ResetPath();
 				navAgent.enabled = false;
 			}
 
-			// Increment speed
-			if (!speedRunning) {
-				speedRunning = true;
-				speed += speedRunIncrement;
+			if(intention == null || intention.Type != DesireType.Run || Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
+				speedRunning = false;
+				speed -= speedRunIncrement;
+				
+				run = false;
+				intention = null;
 			}
 		} 
 	}

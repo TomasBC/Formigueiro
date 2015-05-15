@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class SoldierAnt : Insect
 {	
 	// Public variables
-	public float attackPower = 5.0f;
+	public float attackPower = 5f;
 	public float shieldEnergy = 100.0f;
 
 	public float fieldOfView = 90f;

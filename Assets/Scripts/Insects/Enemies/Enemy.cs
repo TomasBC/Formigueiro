@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Enemy : Insect 
 {
-	public float attackPower = 5f;
+	public float attackPower = 10f;
 	
 	public float fieldOfView = 90f;
 	public float longViewDistance = 25f; 

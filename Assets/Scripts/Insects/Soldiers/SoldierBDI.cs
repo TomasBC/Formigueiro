@@ -121,6 +121,12 @@ public class SoldierBDI : SoldierAnt
 		 */
 		if (run) {
 
+			// Increment speed
+			if(!speedRunning) {
+				speedRunning = true;
+				speed += speedRunIncrement;
+			}
+
 			if(intention == null || intention.Type != DesireType.Run || 
 			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
 
@@ -129,12 +135,6 @@ public class SoldierBDI : SoldierAnt
 				
 				run = false;
 				intention = null;
-			}
-
-			// Increment speed
-			if(!speedRunning) {
-				speedRunning = true;
-				speed += speedRunIncrement;
 			}
 		}
 	}
@@ -225,6 +225,8 @@ public class SoldierBDI : SoldierAnt
 					break;
 				case DesireType.Run:
 					run = true;
+					follow = false;
+					attack = false;
 					break;
 				}
 			}
