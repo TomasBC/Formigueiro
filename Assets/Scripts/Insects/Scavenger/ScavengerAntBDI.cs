@@ -73,12 +73,15 @@ public class ScavengerAntBDI : ScavengerAnt
 			}
 			collided = true;
 		}
-
 	}
 
 	// Reactors
 	protected override void Move() 
 	{
+		// Carry food
+		if(carryingFood) {
+			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
+		}
 		/*
 		 * Path finding navigation:
 		 * 
@@ -166,11 +169,6 @@ public class ScavengerAntBDI : ScavengerAnt
 				run = false;
 				intention = null;
 			}
-		}
-
-		// Carry food
-		if(carryingFood) {
-			food.transform.position = transform.position + new Vector3(0.0f, 1.5f, 0.0f);
 		}
 	}
 
