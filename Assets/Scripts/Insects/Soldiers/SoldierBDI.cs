@@ -6,10 +6,6 @@ using System.Collections.Generic;
 public class SoldierBDI : SoldierAnt 
 {
 	// Beliefs impact
-	public int enemyImpact = 2;
-	public int friendsImpact = 1;
-	public float runDistance = 15f;
-
 	private List<GameObject> ants;
 	private List<GameObject> enemies;
 	private List<GameObject> friends;
@@ -69,18 +65,19 @@ public class SoldierBDI : SoldierAnt
 		 */
 		if (attack || follow) {
 
-			if (intention == null || Vector3.Distance(transform.position, intention.IntentionDest.position) >= runDistance) {
-			 	follow = false;
+			if (intention == null || intention.IntentionDest == null || Vector3.Distance(transform.position, intention.IntentionDest.position) > longViewDistance) {
+				follow = false;
 				attack = false;
 				intention = null;
 			}	
 
-			else if (Vector3.Distance(transform.position, intention.IntentionDest.position) < 2f) { 
-				/* Keep a certain distance when following */ 
+			else if (follow && Vector3.Distance(transform.position, intention.IntentionDest.position) < 5f ||
+			         attack && Vector3.Distance(transform.position, intention.IntentionDest.position) < 2f) { 
+					/* Keep a certain distance when following or attacking */ 
 			}
 			else {
 				transform.LookAt(intention.IntentionDest.transform.position);
-				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, 0.5f * this.speed * Time.fixedDeltaTime);
+				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, this.speed * Time.fixedDeltaTime);
 			}
 		}
 		/*
@@ -109,7 +106,6 @@ public class SoldierBDI : SoldierAnt
 			Rotate(randomMax);
 			base.Move();
 		}
-		
 		/*
 		 * Run situation:
 		 * 
@@ -127,8 +123,8 @@ public class SoldierBDI : SoldierAnt
 				speed += speedRunIncrement;
 			}
 
-			if(intention == null || intention.Type != DesireType.Run || 
-			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
+			if(intention == null || intention.IntentionDest == null || intention.Type != DesireType.Run || 
+			   Vector3.Distance(transform.position, intention.IntentionDest.position) > 15f) {
 
 				speedRunning = false;
 				speed -= speedRunIncrement;
@@ -153,11 +149,15 @@ public class SoldierBDI : SoldierAnt
 		objsInsideCone.TryGetValue("Enemy", out enemies);
 
 		// Calculate danger and confidence
-		int danger = 0;
-		int confidence = 0;
+		float danger = 0f;
+		float confidence = 0f;
 
 		if (enemies != null) {
-			danger = enemies.Count * enemyImpact;
+
+			// 1vs1 situation
+			if(enemies.Count > 1) {
+				danger = enemies.Count;
+			}
 		}
 
 		if (ants != null) {
@@ -169,20 +169,20 @@ public class SoldierBDI : SoldierAnt
 					scavengers.Add(ant);
 				}
 			}
-			confidence = friends.Count * friendsImpact;
+			confidence = friends.Count;
 
 			//Order by proximity and follow the closer one
 			if(scavengers.Count > 0) {
 				scavengers.OrderBy(scavenger => (scavenger.transform.position - transform.position).sqrMagnitude); 
-				desires.Add(new Desire(DesireType.Follow, scavengers[0].transform, danger, confidence, DesirePriorities.FOLLOW_PRIORITY));
+				desires.Add(new Desire(DesireType.Follow, scavengers[0].transform, danger + (0.2f * maxEnergy), confidence + energy, DesirePriorities.FOLLOW_PRIORITY));
 			}
 		}
 
 		if (enemies != null) {
 			//Order by proximity and run/attack the closer one
-			enemies.OrderBy(enemy => (enemy.transform.position - transform.position).sqrMagnitude); 
-			desires.Add(new Desire(DesireType.Attack, enemies[0].transform, danger, confidence, DesirePriorities.ATTACK_PRIORITY)); 
-			desires.Add(new Desire(DesireType.Run, enemies[0].transform, confidence, danger, DesirePriorities.RUN_PRIORITY)); 
+			enemies.OrderBy(enemy => (enemy.transform.position - transform.position).sqrMagnitude);
+			desires.Add(new Desire(DesireType.Attack, enemies[0].transform, danger + (0.2f * maxEnergy), confidence + energy, DesirePriorities.ATTACK_PRIORITY));
+			desires.Add(new Desire(DesireType.Run, enemies[0].transform, confidence + (0.2f * maxEnergy), danger + energy, DesirePriorities.RUN_PRIORITY));
 		}
 		// Default beliefs (Exit or FindFood)  
 		if (desires.Count == 0) {
@@ -207,7 +207,7 @@ public class SoldierBDI : SoldierAnt
 		
 		if (bestDesire != null) {
 
-			futureIntention = new Intention (bestDesire);
+			futureIntention = new Intention(bestDesire);
 
 			if (intention == null || futureIntention.IntentionValue > intention.IntentionValue || futureIntention.Type == intention.Type) {
 				
@@ -225,6 +225,11 @@ public class SoldierBDI : SoldierAnt
 					break;
 				case DesireType.Run:
 					run = true;
+					follow = false;
+					attack = false;
+					break;
+				case DesireType.Patrol:
+					run = false;
 					follow = false;
 					attack = false;
 					break;

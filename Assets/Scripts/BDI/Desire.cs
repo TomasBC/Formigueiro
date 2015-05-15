@@ -6,12 +6,12 @@ public class Desire
 	private DesireType desireType;
 	private Transform desireDest;
 
-	private int danger;
-	private int confidence;
-	private int desireValue;
+	private float danger;
+	private float confidence;
+	private float desireValue;
 
 	// Constructor
-	public Desire(DesireType desireType, Transform desireDest, int danger, int confidence, int priority)
+	public Desire(DesireType desireType, Transform desireDest, float danger, float confidence, float priority)
 	{
 		this.desireType = desireType;
 		this.desireDest = desireDest;
@@ -31,17 +31,17 @@ public class Desire
 		get { return desireDest; }
 	}
 
-	public int Danger 
+	public float Danger 
 	{
 		get { return danger; }
 	}
 
-	public int Confidence 
+	public float Confidence 
 	{
 		get { return confidence; }
 	}
 
-	public int DesireValue 
+	public float DesireValue 
 	{
 		get { return desireValue; }
 	}

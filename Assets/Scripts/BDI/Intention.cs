@@ -6,7 +6,7 @@ public class Intention
 	private Desire desire;
 	private DesireType type;
 
-	private int intentionValue;
+	private float intentionValue;
 	private Transform intentionDest;
 
 	// Constructor
@@ -30,7 +30,7 @@ public class Intention
 		get { return type; }
 	}
 
-	public int IntentionValue 
+	public float IntentionValue 
 	{
 		get { return intentionValue; }
 	}

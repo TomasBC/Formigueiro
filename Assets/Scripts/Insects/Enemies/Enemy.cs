@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 public class Enemy : Insect 
 {
-	public float attackPower = 10f;
-	
+	public float attackPower = 2f;
 	public float fieldOfView = 90f;
 	public float longViewDistance = 25f; 
 
@@ -27,20 +26,23 @@ public class Enemy : Insect
 	// Sensors
 	protected override void OnCollisionEnter(Collision collision) {
 		
-		base.OnCollisionEnter(collision);
-		
-		//Ant?
-		if (collision.gameObject.tag.Equals("Ant")) {
+		base.OnCollisionEnter (collision);
 
-			//SoldierAnt?
-			if(collision.gameObject.name.Contains("Soldier")) {
-				UpdateEnergy(-(collision.gameObject.GetComponent<SoldierAnt>().attackPower)); //Lose health with the attack
-			}
-			UpdateEnergy(attackPower * 0.5f); // Gain energy with the attack
-		}
 		//Food?
 		if (collision.gameObject.tag.Equals("Food")) {
 			collided = true;
+		}
+	}
+
+	protected void OnCollisionStay(Collision collision) {
+
+		//Ant?
+		if (collision.gameObject.tag.Equals("Ant")) {
+			
+			//SoldierAnt?
+			if(collision.gameObject.name.Contains("soldier")) {
+				UpdateEnergy(-(collision.gameObject.GetComponent<SoldierAnt>().attackPower)); //Lose health with the attack
+			}
 		}
 	}
 

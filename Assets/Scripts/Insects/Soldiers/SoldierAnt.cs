@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class SoldierAnt : Insect
 {	
 	// Public variables
-	public float attackPower = 5f;
+	public float attackPower = 2f;
 	public float shieldEnergy = 100.0f;
 
 	public float fieldOfView = 90f;
@@ -25,15 +25,12 @@ public class SoldierAnt : Insect
 	}
 
 	// Sensors
-	protected override void OnCollisionEnter(Collision collision)
+	protected void OnCollisionStay(Collision collision)
 	{
-		base.OnCollisionEnter(collision);
-
 		//Enemy?
 		if (collision.gameObject.tag.Equals("Enemy")) {
 			UpdateEnergy(-(collision.gameObject.GetComponent<Enemy>().attackPower)); //Lose health
 		}
-		UpdateEnergy(attackPower * 0.5f); // Gain energy with the attack
 	}
 
 	protected override Dictionary<string, List<GameObject>> CheckFieldOfView() 

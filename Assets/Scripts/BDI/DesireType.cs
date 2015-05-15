@@ -10,5 +10,5 @@ public enum DesireType
 	Follow,
 	Exit,
 	FindFood,
-	Patrol,
+	Patrol
 }

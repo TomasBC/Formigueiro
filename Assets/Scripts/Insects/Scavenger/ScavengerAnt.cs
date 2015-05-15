@@ -49,6 +49,22 @@ public class ScavengerAnt : Insect
 		}
 		base.OnCollisionEnter(collision);
 	}
+
+	protected virtual void OnTriggerEnter(Collider collider) 
+	{
+		//LabyrinthDoor?
+		if (collider.gameObject.tag.Equals("Labyrinth")) {
+			
+			//LabyrinthExit?
+			if(collider.gameObject.name.Equals("labyrinth_exit")) {
+				insideLabyrinth = false;
+	
+			} //LabyrinthEntrance?
+			else { 
+				insideLabyrinth = true;
+			}
+		}
+	}
 	
 	// Reactors
 	protected override void Move() {
@@ -86,7 +102,7 @@ public class ScavengerAnt : Insect
 			foodRigidBody.freezeRotation = false;
 
 			food.GetComponent<Food>().Transport = false;
-			foodRigidBody.AddForce(transform.forward * 400.0f * Time.deltaTime);
+			foodRigidBody.AddForce(transform.forward * 400.0f);
 	
 			food = null;
 			foodRigidBody = null;

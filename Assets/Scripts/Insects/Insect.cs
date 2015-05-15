@@ -46,21 +46,6 @@ public class Insect : MonoBehaviour
 	}
 
 	// Sensors
-	protected virtual void OnTriggerEnter(Collider collider) 
-	{
-		//LabyrinthDoor?
-		if (collider.gameObject.tag.Equals("Labyrinth")) {
-
-			//LabyrinthExit?
-			if(collider.gameObject.name.Equals("labyrinth_exit")) {
-				insideLabyrinth = false;
-			} //LabyrinthEntrance?
-			else { 
-				insideLabyrinth = true;
-			}
-		}
-	}
-	
 	protected virtual void OnCollisionEnter(Collision collision) 
 	{
 		//SameInsect? or Wall?

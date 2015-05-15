@@ -138,13 +138,10 @@ MonoBehaviour:
   frameEnergyLoss: -.00100000005
   randomMin: 4
   randomMax: 250
-  attackPower: 5
+  attackPower: 2
   shieldEnergy: 100
   fieldOfView: 90
-  longViewDistance: 30
-  enemyImpact: 2
-  friendsImpact: 1
-  runDistance: 15
+  longViewDistance: 20
 --- !u!114 &11490642
 MonoBehaviour:
   m_ObjectHideFlags: 1

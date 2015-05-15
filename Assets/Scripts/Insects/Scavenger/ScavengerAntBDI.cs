@@ -11,13 +11,11 @@ public class ScavengerAntBDI : ScavengerAnt
 	private Vector3 eulerAngleVelocity;
 
 	// Beliefs impact
-	public int enemyImpact = 2;
-	public int friendsImpact = 1;
 	public float runDistance = 15f;
 
 	// Beliefs	
-	private Transform unloadZone = null;
-	private Transform labyrinthDoor = null;
+	public Transform unloadZone = null;
+	public Transform labyrinthDoor = null;
 
 	private List<GameObject> foood;
 	private List<GameObject> extras;
@@ -83,10 +81,10 @@ public class ScavengerAntBDI : ScavengerAnt
 			if (!navAgent.enabled) {
 
 				navAgent.enabled = true;
-				navAgent.ResetPath ();
+				navAgent.ResetPath();
 
 				navAgent.destination = intention.IntentionDest.transform.position;
-				Utils.SmoothNavigationRot (navAgent, rigidBody, eulerAngleVelocity);	
+				Utils.SmoothNavigationRot(navAgent, rigidBody, eulerAngleVelocity);	
 			}
 
 			// Check if we reached out destination
@@ -110,7 +108,7 @@ public class ScavengerAntBDI : ScavengerAnt
 		 * 
 		 */
 		else if (collided && !proceed) {
-			Rotate (randomMin);
+			Rotate(randomMin);
 			collided = false;
 		}
 
@@ -152,7 +150,8 @@ public class ScavengerAntBDI : ScavengerAnt
 				navAgent.enabled = false;
 			}
 
-			if(intention == null || intention.Type != DesireType.Run || Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
+			if(intention == null || intention.IntentionDest == null || 
+			   intention.Type != DesireType.Run || Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
 				speedRunning = false;
 				speed -= speedRunIncrement;
 				
@@ -183,7 +182,7 @@ public class ScavengerAntBDI : ScavengerAnt
 				if (extra.name.Contains("labyrinth_exit")) {
 					labyrinthDoor = extra.transform;
 				}
-				else if(extra.name.Contains("queen_wall")) {
+				else if (extra.name.Contains("queen_wall")) {
 					unloadZone = extra.transform;
 				}
 			}
@@ -194,18 +193,23 @@ public class ScavengerAntBDI : ScavengerAnt
 		int confidence = 0;
 
 		if (friends != null) {
-			confidence = friends.Count * friendsImpact;
+			confidence = friends.Count;
 		}
 
 		if (enemies != null) {
-			danger = enemies.Count * enemyImpact;
+			danger = enemies.Count;
 			enemies.OrderBy(enemy => (enemy.transform.position - transform.position).sqrMagnitude); //Order by proximity
 			desires.Add(new Desire(DesireType.Run, enemies[0].transform, confidence, danger, DesirePriorities.RUN_PRIORITY)); //Add run belief
 		}
 
 		// If we are carrying food
 		if (carryingFood) {
-			desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence, DesirePriorities.DROP_FOOD_PRIORITY));
+
+			if(Vector3.Distance(transform.position, labyrinthDoor.position) > 1f && !insideLabyrinth) {
+				desires.Add(new Desire(DesireType.DropFood, labyrinthDoor, danger, confidence, DesirePriorities.DROP_FOOD_PRIORITY));
+			} else {
+				desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence, DesirePriorities.DROP_FOOD_PRIORITY));
+			}
 		}
 
 		// If we see some food and we are not carrying any

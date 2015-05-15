@@ -6,8 +6,6 @@ using System.Collections.Generic;
 public class EnemyBDI : Enemy 
 {
 	// Beliefs impact
-	public int enemyImpact = 2;
-	public int friendsImpact = 1;
 	public float runDistance = 15f;
 
 	// Beliefs
@@ -69,17 +67,17 @@ public class EnemyBDI : Enemy
 		 */
 		if (attack) {
 
-			if(intention == null || intention.Type != DesireType.Attack || 
-			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
+			if(intention == null || intention.IntentionDest == null || intention.Type != DesireType.Attack || 
+			   Vector3.Distance(transform.position, intention.IntentionDest.position) > longViewDistance) {
 				attack = false;
 				intention = null;
 
-			} else if (Vector3.Distance(transform.position, intention.IntentionDest.position) < 2f) { 
-				/* Keep a certain distance when following */ 
+			} else if (Vector3.Distance(transform.position, intention.IntentionDest.position) < 3f) { 
+				/* Keep a certain distance when attacking */ 
 			}
 			else {
 				transform.LookAt(intention.IntentionDest.transform.position);
-				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, 0.5f * this.speed * Time.fixedDeltaTime);
+				transform.position = Vector3.MoveTowards(transform.position, intention.IntentionDest.transform.position, this.speed * Time.fixedDeltaTime);
 			}
 		}
 		
@@ -126,7 +124,7 @@ public class EnemyBDI : Enemy
 				speed += speedRunIncrement;
 			}
 
-			if(intention == null || intention.Type != DesireType.Run || 
+			if(intention == null || intention.IntentionDest == null || intention.Type != DesireType.Run || 
 			   Vector3.Distance(transform.position, intention.IntentionDest.position) > runDistance) {
 				
 				speedRunning = false;
@@ -152,30 +150,30 @@ public class EnemyBDI : Enemy
 		objsInsideCone.TryGetValue("Enemy", out friends);
 
 		// Calculate danger and confidence
-		int danger = 0;
-		int confidence = 0;
+		float danger = 0f;
+		float confidence = 0f;
 
 		if (friends != null) {
-			confidence = friends.Count * friendsImpact;
+			confidence = (float)friends.Count;
 		}
 
 		if (ants != null) {
 
 			foreach (GameObject ant in ants) {
 
-				if (ant.name.Contains("Soldier")) {
+				if (ant.name.Contains("soldier")) {
 					soldiers.Add(ant);
 				} else {
 					scavengers.Add(ant);
 				}
 			}
-			danger = soldiers.Count * enemyImpact;
-			confidence += scavengers.Count * friendsImpact;
+			danger = (float)soldiers.Count + energy;
+			confidence += (float)scavengers.Count + energy;
 
 			//Order by proximity
 			ants.OrderBy(ant => (ant.transform.position - transform.position).sqrMagnitude);
 			desires.Add(new Desire(DesireType.Attack, ants[0].transform, danger, confidence, DesirePriorities.ATTACK_PRIORITY));
-			desires.Add(new Desire(DesireType.Run, ants[0].transform, confidence, danger, DesirePriorities.RUN_PRIORITY)); 
+			desires.Add(new Desire(DesireType.Run, ants[0].transform, confidence, danger, DesirePriorities.RUN_PRIORITY));
 		}
 		// Default beliefs (Exit or FindFood)  
 		if (desires.Count == 0) {
