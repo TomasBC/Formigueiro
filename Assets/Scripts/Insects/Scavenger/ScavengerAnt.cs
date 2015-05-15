@@ -47,7 +47,10 @@ public class ScavengerAnt : Insect
 			GameObject enemy = collision.gameObject;
 			UpdateEnergy(-(enemy.GetComponent<Enemy>().attackPower)); //Lose health
 		}
-		base.OnCollisionEnter(collision);
+		//SameWall?
+		if (collision.gameObject.tag.Equals("Wall")) {
+			collided = true;
+		}
 	}
 
 	protected virtual void OnTriggerEnter(Collider collider) 

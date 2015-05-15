@@ -60,7 +60,22 @@ public class ScavengerAntBDI : ScavengerAnt
 			GUI.Label(rect, intention.Type.ToString() + " - " + Mathf.Round(energy), guiStyle);
 		}
 	}
-	
+
+	// Sensors		
+	protected override void OnCollisionEnter(Collision collision) 
+	{
+		base.OnCollisionEnter(collision);
+
+		//SameInsect?
+		if (collision.gameObject.tag.Equals(this.gameObject.tag)) {
+			if(collision.gameObject.name.Contains("scavenger")){
+				SetKnowledge(collision.gameObject);
+			}
+			collided = true;
+		}
+
+	}
+
 	// Reactors
 	protected override void Move() 
 	{
@@ -161,6 +176,16 @@ public class ScavengerAntBDI : ScavengerAnt
 		} 
 	}
 
+	//Communication
+	protected void SetKnowledge(GameObject gameObject){
+		if(unloadZone==null){
+			unloadZone=gameObject.GetComponent<ScavengerAntBDI>().unloadZone;
+		}
+		if(labyrinthDoor==null){
+			labyrinthDoor=gameObject.GetComponent<ScavengerAntBDI>().labyrinthDoor;
+		}
+	}
+
 	// BDI Evaluators	
 	protected void EvalBeliefs()
 	{
@@ -204,12 +229,7 @@ public class ScavengerAntBDI : ScavengerAnt
 
 		// If we are carrying food
 		if (carryingFood) {
-
-			if(Vector3.Distance(transform.position, labyrinthDoor.position) > 1f && !insideLabyrinth) {
-				desires.Add(new Desire(DesireType.DropFood, labyrinthDoor, danger, confidence, DesirePriorities.DROP_FOOD_PRIORITY));
-			} else {
-				desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence, DesirePriorities.DROP_FOOD_PRIORITY));
-			}
+			desires.Add(new Desire(DesireType.DropFood, unloadZone, danger, confidence, DesirePriorities.DROP_FOOD_PRIORITY));
 		}
 
 		// If we see some food and we are not carrying any

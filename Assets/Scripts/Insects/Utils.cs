@@ -4,6 +4,18 @@ using System.Collections.Generic;
 
 public class Utils : MonoBehaviour 
 {
+	public static int FindGameObjectsByName(string name, string tag)
+	{
+		GameObject[] objs = GameObject.FindGameObjectsWithTag(tag);
+		int count=0;
+		for(int i = 0; i<objs.Length; i++){
+			if(objs[i].name.Contains(name)){
+				count++;
+			}
+		}
+		return count;
+	}
+
 	// View cone related methods
 	public static bool CheckIfInsideCone(GameObject obj, GameObject objToCompareTo, float fieldOfView, float longViewDistance) 
 	{
